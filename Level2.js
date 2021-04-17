@@ -103,7 +103,7 @@ update() {
         this.time.addEvent({
             delay: 400,
             callback: () => {
-                this.player.anims.stop('death',true);
+                this.player.x = 9999;
                 this.registry.destroy();
                 this.events.off();
                 this.scene.restart();
@@ -124,6 +124,7 @@ update() {
             delay: 650, // in ms
             callback: () => {
                 this.winState = false;
+                this.player.x = 9999;
                 this.scene.start("Level2");
             }
           })
