@@ -5,7 +5,7 @@ export default class Level1 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.atlas('dude', 'assets/Dude2.png', 'assets/dude2.json');
+        this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
         this.load.image('char', 'assets/char.jpg');
         this.load.image('platform', 'assets/platformg.jpg');
         this.load.image('bg', 'assets/bgx.jpg');
@@ -14,10 +14,9 @@ export default class Level1 extends Phaser.Scene {
     }
     create() {
         //Utility variables
-        this.winText = "";
+        this.statusText = "";
         this.jumpCount = 0;
         this.coolDown = 0;
-        this.wins = 0;
 
         //Bind world objects
         this.add.image(400, 300, 'bg');
@@ -35,7 +34,7 @@ export default class Level1 extends Phaser.Scene {
         //Create and configure player
         this.player = this.physics.add.sprite(75, 485, 'dude');
         this.player.setScale(2);
-        this.player.setBounce(0.2);
+        this.player.setBounce(0);
         this.player.setCollideWorldBounds(true);
 
         //Add colliders between objects
@@ -43,7 +42,7 @@ export default class Level1 extends Phaser.Scene {
         this.physics.add.overlap(this.deathLava, this.player, this.death, null, this);
         this.physics.add.collider(this.goal, this.player, this.win, null, this);
 
-        this.winText = this.add.text(0, 0, 'Score: 0');
+        this.statusText = this.add.text(0, 0, 'Free Real-estate');
 
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
@@ -91,7 +90,18 @@ export default class Level1 extends Phaser.Scene {
             repeat: -1
 
         });
-
+        this.anims.create({
+            key: 'death',
+            frames: this.anims.generateFrameNames('dude', { prefix: 'death', end: 5, zeroPad: 3}),frameRate: 13
+        });
+        this.anims.create({
+            key: 'teleport',
+            frames: this.anims.generateFrameNames('dude', { prefix: 'teleport', end: 11, zeroPad: 3}),frameRate: 13
+        });
+        this.anims.create({
+            key: 'dash',
+            frames: this.anims.generateFrameNames('dude', { prefix: 'dash', end: 2, zeroPad: 3}),frameRate: 5
+        });
 
 
     }
@@ -102,14 +112,24 @@ export default class Level1 extends Phaser.Scene {
         const rightPress = Phaser.Input.Keyboard.JustDown(this.controls.right);
         const leftPress = Phaser.Input.Keyboard.JustDown(this.controls.left);
         const touchFloor = this.player.body.touching.down;
+        this.changeAnimations = false;
 
         //Gameover Check
         this.gameOver;
         if (this.gameOver) {
-            this.registry.destroy();
-            this.events.off();
-            this.scene.restart();
-            this.gameOver = false;
+            this.changeAnimations = true;
+            this.player.anims.play('death',true);
+            this.time.addEvent({
+                delay: 400, // in ms
+                callback: () => {
+                    this.player.anims.stop('death',true);
+                    this.registry.destroy();
+                    this.events.off();
+                    this.scene.restart();
+                    this.gameOver = false;  
+                }
+              })
+   
         }
 
         //Basic Movement and animation binding
@@ -117,8 +137,10 @@ export default class Level1 extends Phaser.Scene {
             this.player.setVelocityX(-160);
             this.player.flipX = true;
             if (!touchFloor) {
+                if(!this.changeAnimations)
                 this.player.anims.play('jumping', true);
             } else {
+                if(!this.changeAnimations)
                 this.player.anims.play('move_right', true);
             }
         }
@@ -127,19 +149,25 @@ export default class Level1 extends Phaser.Scene {
             this.player.flipX = false;
             if (!touchFloor) {
                 if (this.controls.right.isDown || this.controls.left.isDown) {
+                    if(!this.changeAnimations)
                     this.player.anims.play('jumping', true);
                 }
                 else {
+                    if(!this.changeAnimations)
                     this.player.anims.play('standing_jump', true);
                 }
             } else {
+                if(!this.changeAnimations)
                 this.player.anims.play('move_right', true);
             }
         }
         else
         {
             this.player.setVelocityX(0);
+            if(!this.changeAnimations)
+            {
             this.player.anims.play('standing', true);
+            }
         }
 
         //Double jump
@@ -156,31 +184,45 @@ export default class Level1 extends Phaser.Scene {
         }
 
         //Dash move has 2 second cooldown
-        if (leftPress || rightPress) {
+        if (leftPress) {
             this.pressDelay = this.time.now - this.lastTime;
             this.lastTime = this.time.now;
             this.coolDownCheck = this.time.now - this.coolDown;
-            console.log("Cooldown"+this.coolDown);
-            if (this.pressDelay < 350 && rightPress && this.coolDownCheck > 2000) {
-                this.player.setVelocityX(4000);
-                this.coolDown = this.time.now;
-                console.log("Dash right");
-            } else if (this.pressDelay < 350 && leftPress && this.coolDownCheck > 2000) {
+            if (this.pressDelay < 350 && leftPress && this.coolDownCheck > 2000) {
+                this.player.anims.play('dash',true)
                 this.player.setVelocityX(-4000);
                 this.coolDown = this.time.now;
-                console.log("Dash left")
             }
         }
+        if (rightPress) {
+            this.pressDelay = this.time.now - this.lastTime;
+            this.lastTime = this.time.now;
+            this.coolDownCheck = this.time.now - this.coolDown;
+            if (this.pressDelay < 350 && rightPress && this.coolDownCheck > 2000) {
+                this.player.anims.play('dash',true)
+                this.player.setVelocityX(4000);
+                this.coolDown = this.time.now;
+        }
+    }
     }
 
     //Win condition: land on end goal
     win(player, goal) {
         if (this.player.body.touching.down) {
-            this.scene.start("Level2");
+            this.physics.pause();
+            this.changeAnimations = true;
+            this.player.anims.play('teleport',true);
+            this.time.addEvent({
+                delay: 400, // in ms
+                callback: () => {
+                    this.scene.start("Level2");
+                }
+              })
         }
     }
     //Lose condition: hit lava
     death(player, deathLava) {
+        this.physics.pause();
         this.gameOver = true;
     }
 }

@@ -6,7 +6,7 @@ export default class Level2 extends Phaser.Scene {
     }
   
     preload() {
-        this.load.atlas('dude','assets/Dude2.png','assets/dude2.json');
+        this.load.atlas('dude','assets/dude2.png','assets/dude2.json');
         this.load.image('char','assets/char.jpg');
         this.load.image('platform', 'assets/platformg.jpg');
         this.load.image('bg', 'assets/bgx.jpg');
@@ -39,7 +39,7 @@ create() {
 
     this.player = this.physics.add.sprite(75, 485, 'dude');
     this.player.setScale(.25);
-    this.player.setBounce(0.2);
+    this.player.setBounce(0);
     this.player.body.setCollideWorldBounds(true,2,2);
 
 
@@ -69,7 +69,18 @@ create() {
     this.anims.create({
         key: 'standing_jump',
         frames: this.anims.generateFrameNames('dude', { prefix: 'jump_standing_jet', end: 1, zeroPad: 3}), repeat: -1
-    
+    });
+    this.anims.create({
+        key: 'death',
+        frames: this.anims.generateFrameNames('dude', { prefix: 'death', end: 5, zeroPad: 3})
+    });
+    this.anims.create({
+        key: 'teleport',
+        frames: this.anims.generateFrameNames('dude', { prefix: 'teleport', end: 11, zeroPad: 3})
+    });
+    this.anims.create({
+        key: 'dash',
+        frames: this.anims.generateFrameNames('dude', { prefix: 'dash', end: 2, zeroPad: 3})
     });
 
 
@@ -77,53 +88,71 @@ create() {
 }
 
 update() {
+    //Evaluation constants (Just pressed a key, touching the floor, etc)
     const upPress = Phaser.Input.Keyboard.JustDown(this.controls.up);
     const rightPress = Phaser.Input.Keyboard.JustDown(this.controls.right);
     const leftPress = Phaser.Input.Keyboard.JustDown(this.controls.left);
-    
     const touchFloor = this.player.body.touching.down;
+    this.changeAnimations = false;
+
+    //Gameover Check
     this.gameOver;
-if(this.gameOver){
+    if (this.gameOver) {
+        this.changeAnimations = true;
+        this.player.anims.play('death', true);
+        this.time.addEvent({
+            delay: 400, // in ms
+            callback: () => {
+                this.player.anims.stop('death', true);
+                //this.player.anims.play('standing',true);
+                this.registry.destroy();
+                this.events.off();
+                this.scene.restart();
+                this.gameOver = false;
+            }
+        })
 
+    }
 
-
-this.registry.destroy();
-this.events.off();
-this.scene.restart();
-this.gameOver = false;
-
-
-}
-    
+    //Basic Movement and animation binding
     if (this.controls.left.isDown) {
         this.player.setVelocityX(-160);
-        this.player.flipX = true;if(!touchFloor)
-        {
-            this.player.anims.play('jumping',true);
-        }
-        else{
-        this.player.anims.play('move_right',true);
+        this.player.flipX = true;
+        if (!touchFloor) {
+            if (!this.changeAnimations)
+                this.player.anims.play('jumping', true);
+        } else {
+            if (!this.changeAnimations)
+                this.player.anims.play('move_right', true);
         }
     } else if (this.controls.right.isDown) {
         this.player.setVelocityX(160);
         this.player.flipX = false;
-        if(!touchFloor)
-        {
-            this.player.anims.play('jumping',true);
-        }
-        else{
-        this.player.anims.play('move_right',true);
+        if (!touchFloor) {
+            if (this.controls.right.isDown || this.controls.left.isDown) {
+                if (!this.changeAnimations)
+                    this.player.anims.play('jumping', true);
+            } else {
+                if (!this.changeAnimations)
+                    this.player.anims.play('standing_jump', true);
+            }
+        } else {
+            if (!this.changeAnimations)
+                this.player.anims.play('move_right', true);
         }
     } else {
         this.player.setVelocityX(0);
-        this.player.anims.play('standing',true);
+        if (!this.changeAnimations) {
+            this.player.anims.play('standing', true);
+        }
     }
+
     //Double jump
     if (upPress && touchFloor) {
         this.player.setVelocityY(-220);
         this.jumpCount++;
     }
-    if (upPress && (!touchFloor && this.jumpCount < 2)) {
+    if (upPress && (!touchFloor && this.jumpCount == 1)) {
         this.player.setVelocityY(-220);
         this.jumpCount++;
     }
@@ -131,39 +160,46 @@ this.gameOver = false;
         this.jumpCount = 0;
     }
 
-    //Dash move
-    if(leftPress || rightPress){
+    //Dash move has 2 second cooldown
+    if (leftPress) {
         this.pressDelay = this.time.now - this.lastTime;
         this.lastTime = this.time.now;
-            console.log(this.pressDelay)
-        if(this.pressDelay < 350 && rightPress) {
-            this.player.setVelocityX(1000);
-            console.log("Dash right");
-        }
-        else if(this.pressDelay < 350 && leftPress){
-            this.player.setVelocityX(1000);
-            console.log("Dash left")
+        this.coolDownCheck = this.time.now - this.coolDown;
+        if (this.pressDelay < 350 && leftPress && this.coolDownCheck > 2000) {
+            this.player.anims.play('dash', true)
+            this.player.setVelocityX(-4000);
+            this.coolDown = this.time.now;
         }
     }
-
-}
-
-win(player,goal) {
-    if(this.player.body.touching.down)
-    {
-        this.wins++;
-        this.winText.setText('Score: ' + this.wins);
-        this.player.x = 75;
-        this.player.y = 480;
+    if (rightPress) {
+        this.pressDelay = this.time.now - this.lastTime;
+        this.lastTime = this.time.now;
+        this.coolDownCheck = this.time.now - this.coolDown;
+        if (this.pressDelay < 350 && rightPress && this.coolDownCheck > 2000) {
+            this.player.anims.play('dash', true)
+            this.player.setVelocityX(4000);
+            this.coolDown = this.time.now;
+        }
     }
 }
 
+//Win condition: land on end goal
+win(player, goal) {
+    if (this.player.body.touching.down) {
+        this.physics.pause();
+        this.changeAnimations = true;
+        this.player.anims.play('teleport', true);
+        this.time.addEvent({
+            delay: 400, // in ms
+            callback: () => {
+                this.scene.start("Level2");
+            }
+        })
+    }
+}
+//Lose condition: hit lava
 death(player, deathLava) {
+    this.physics.pause();
     this.gameOver = true;
-}
-bounce(player,bouncer){
-    this.test = this.player.body.velocity.x + 10;
-    this.player.body.velocity.x = -this.test;
-    
 }
 }
