@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>MEGAMAN IS GOING TO SPACE</title>
-    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.54.0/dist/phaser.min.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -19,21 +19,27 @@
     import optionsMenu from "./optionsMenu.js";
     import Level1 from "./Level1.js";
     import Level2 from "./Level2.js";
+    import LevelEX from "./LevelEX.js";
     
    var config = {
             type: Phaser.AUTO,
-            width: 800,
-            height: 600,
+            width: 1920,
+            height: 1080,
+            scale: {
+            mode: Phaser.Scale.ScaleModes.FIT,
+            autoCenter: Phaser.Scale.Center.CENTER_BOTH
+            },
             physics: {
                 default: 'arcade',
                 arcade: {
                     gravity: {
                         y: 300
                     },
-                    debug: false
+                    fps: 60,
+                    debug: true
                 }
             },
-            scene: [primaryMenu,optionsMenu,Level1,Level2]
+            scene: [primaryMenu,optionsMenu,Level1,Level2,LevelEX]
         };
 
         var game = new Phaser.Game(config);
