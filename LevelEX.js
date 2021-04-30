@@ -4,7 +4,9 @@ export default class LevelEX extends Phaser.Scene {
         super('LevelEX');
         
     }
-  
+    init(options){
+        this.sound = options.sound;
+    }
     preload() {
         this.load.atlas('dude','assets/dude2.png','assets/dude2.json');
         this.load.image('char','assets/char.jpg');
@@ -16,7 +18,7 @@ export default class LevelEX extends Phaser.Scene {
 create() {
     this.winText = "";
     this.jumpCount = 0;
-    
+    console.log("Sound status update:"+this.sound);
     this.wins = 0;
     
     this.add.image(400, 300, 'bg');
@@ -54,33 +56,33 @@ create() {
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.anims.create({
         key: 'move_right',
-        frames: this.anims.generateFrameNames('dude', { prefix: 'walk', end: 4, zeroPad: 3}),frameRate: 10, repeat: -1});
+        frames: this.anims.generateFrameNames('dude', { prefix: 'walk',start:1, end: 4, zeroPad: 3}),frameRate: 10, repeat: -1});
 
     this.anims.create({
         key: 'standing',
-        frames: this.anims.generateFrameNames('dude', { prefix: 'stand', end: 1, zeroPad: 3}), repeat: -1
+        frames: this.anims.generateFrameNames('dude', { prefix: 'stand',start:1, end: 1, zeroPad: 3}), repeat: -1
     
     });
     this.anims.create({
         key: 'jumping',
-        frames: this.anims.generateFrameNames('dude', { prefix: 'jump', end: 4, zeroPad: 3}), repeat: -1
+        frames: this.anims.generateFrameNames('dude', { prefix: 'jump',start:1, end: 4, zeroPad: 3}), repeat: -1
     
     });
     this.anims.create({
         key: 'standing_jump',
-        frames: this.anims.generateFrameNames('dude', { prefix: 'jump_standing_jet', end: 1, zeroPad: 3}), repeat: -1
+        frames: this.anims.generateFrameNames('dude', { prefix: 'jump_standing_jet',start:1, end: 1, zeroPad: 3}), repeat: -1
     });
     this.anims.create({
         key: 'death',
-        frames: this.anims.generateFrameNames('dude', { prefix: 'death', end: 5, zeroPad: 3})
+        frames: this.anims.generateFrameNames('dude', { prefix: 'death',start:1, end: 5, zeroPad: 3})
     });
     this.anims.create({
         key: 'teleport',
-        frames: this.anims.generateFrameNames('dude', { prefix: 'teleport', end: 11, zeroPad: 3})
+        frames: this.anims.generateFrameNames('dude', { prefix: 'teleport',start:1, end: 11, zeroPad: 3})
     });
     this.anims.create({
         key: 'dash',
-        frames: this.anims.generateFrameNames('dude', { prefix: 'dash', end: 2, zeroPad: 3})
+        frames: this.anims.generateFrameNames('dude', { prefix: 'dash',start:1, end: 2, zeroPad: 3})
     });
 
 

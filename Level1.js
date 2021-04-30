@@ -4,6 +4,9 @@ export default class Level1 extends Phaser.Scene {
         super('Level1');
     }
 
+    init(options){
+        this.sound = options.sound;
+    }
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
         this.load.image('char', 'assets/char.jpg');
@@ -28,6 +31,7 @@ export default class Level1 extends Phaser.Scene {
         this.add.image(0, 0, 'bg').setOrigin(0);
         this.tutorialInfo = this.add.image(200,400,'info').setScale(2,1);
         this.statusText = this.add.text(10, 315, this.movementControls1, {color: 'black'});
+        console.log("Sound status: "+this.sound);
         this.platforms = this.physics.add.staticGroup();
         this.deathLava = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
@@ -158,7 +162,7 @@ export default class Level1 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    this.scene.start("Level2");
+                    this.scene.start('Level2',{sound: this.sound});
                 }
               })
         }
