@@ -5,7 +5,7 @@ export default class LevelEX extends Phaser.Scene {
         
     }
     init(options){
-        this.sound = options.sound;
+        this.soundStatus = options.soundStatus;
     }
     preload() {
         this.load.atlas('dude','assets/dude2.png','assets/dude2.json');
@@ -18,7 +18,7 @@ export default class LevelEX extends Phaser.Scene {
 create() {
     this.winText = "";
     this.jumpCount = 0;
-    console.log("Sound status update:"+this.sound);
+    console.log("Sound status update:"+this.soundStatus);
     this.wins = 0;
     
     this.add.image(400, 300, 'bg');

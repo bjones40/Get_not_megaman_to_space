@@ -5,7 +5,7 @@ export default class Level2 extends Phaser.Scene {
         super('Level2');
     }
     init(options){
-        this.sound = options.sound;
+        this.soundStatus = options.soundStatus;
     }
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
@@ -28,7 +28,7 @@ export default class Level2 extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.deathLava = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
-        console.log("Sound update: "+this.sound);
+        console.log("Sound update: "+this.soundStatus);
         this.spike = this.physics.add.staticGroup();
 
         //Create world objects
@@ -191,7 +191,7 @@ export default class Level2 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    this.scene.start("LevelEX",{sound: this.sound});
+                    this.scene.start("LevelEX",{soundStatus: this.soundStatus});
                 }
               })
         }
