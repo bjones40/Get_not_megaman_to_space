@@ -34,7 +34,7 @@ this.gameButton.on('pointerdown', function (pointer) {
 
 this.gameButton2.on('pointerdown', function (pointer) {
   this.scene.stop();
-  this.scene.start('optionsMenu');
+  this.scene.start('optionsMenu',{sound: this.sound});
 }.bind(this));
 
 
