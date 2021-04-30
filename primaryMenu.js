@@ -1,22 +1,8 @@
 export default class primaryMenu extends Phaser.Scene {
-  constructor(){
-    super('primaryMenu');
-  }
-
-  init(options)
-  {
-    this.sound = options.sound;
-    console.log("Sound update: " + this.sound);
-  }
-  
-  preload() {
-    this.load.image('sbutton','assets/start.png');
-    this.load.image('obutton','assets/options.png');
-    this.load.audio("title_music", "assets/audio/sample_music.mp3");
-  }
-
-  create(){
-    if(typeof(this.sound) === 'undefined')
+    constructor(){
+        super('primaryMenu');
+    }
+    init(options)
     {
         this.soundStatus = options.soundStatus;
         console.log("Sound update: "+this.soundStatus);
@@ -33,7 +19,7 @@ export default class primaryMenu extends Phaser.Scene {
      }
       this.gameButton = this.add.sprite(1000, 350, 'sbutton').setInteractive();
       this.gameButton2 = this.add.sprite(1000, 500, 'obutton').setInteractive();
-
+  
         
         
    
@@ -50,18 +36,6 @@ this.gameButton2.on('pointerdown', function (pointer) {
   this.scene.stop();
   this.scene.start('optionsMenu',{soundStatus: this.soundStatus});
 }.bind(this));
->>>>>>> 19e25df9856dd8b436e8d8f3ca2434d9434cb4b9
 
-    //button interactions
-    this.gameButton.on('pointerdown', function (pointer) {
-      this.scene.stop();
-      this.scene.start('Level1',{sound: this.sound});
-    }.bind(this));
-
-    this.gameButton2.on('pointerdown', function (pointer) {
-      this.scene.stop();
-      this.scene.start('optionsMenu',{sound: this.sound});
-    }.bind(this));
-  
-  }
+}
 }

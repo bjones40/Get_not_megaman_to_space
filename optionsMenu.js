@@ -2,19 +2,16 @@ export default class optionsMenu extends Phaser.Scene {
   constructor(){
     super('optionsMenu');
   }
-  
-   init(options)
+  init(options)
   {
-    this.soundStatus = options.soundStatus;
+  this.soundStatus = options.soundStatus;
     console.log("Sound update: "+this.soundStatus);
   }
->>>>>>> 19e25df9856dd8b436e8d8f3ca2434d9434cb4b9
   preload(){
     this.load.image('rbutton','assets/return.png');
     this.load.image('on','assets/ON.jpg');
     this.load.image('off','assets/OFF.jpg');
   }
-
   create(){
     this.gameButton = this.add.sprite(960, 600, 'rbutton').setInteractive();
     this.onButton = this.add.sprite(1100, 300, 'on').setInteractive();
