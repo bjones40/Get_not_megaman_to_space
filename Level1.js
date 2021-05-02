@@ -268,7 +268,6 @@ export default class Level1 extends Phaser.Scene {
 
             if(this.soundStatus == true && this.counter == 1)
             {
-                console.log("TESTING");
                 this.messageSound.play();
                 this.counter++;
             }
@@ -281,7 +280,6 @@ export default class Level1 extends Phaser.Scene {
 
             if(this.soundStatus == true && this.counter == 2)
             {
-                console.log("TESTING");
                 this.messageSound.play();
                 this.counter++;
             }
@@ -294,7 +292,6 @@ export default class Level1 extends Phaser.Scene {
 
             if(this.soundStatus == true && this.counter == 3)
             {
-                console.log("TESTING");
                 this.messageSound.play();
                 this.counter++;
             }
