@@ -29,7 +29,6 @@ export default class primaryMenu extends Phaser.Scene {
       //audio
       if(this.soundStatus){
         this.mainMusic = this.sound.add("mainMusic");
-        this.mainMusic.resume();
         this.mainMusic.play();
       }
       else{

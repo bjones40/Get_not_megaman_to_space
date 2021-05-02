@@ -7,6 +7,7 @@ export default class Level1 extends Phaser.Scene {
     init(options){
         this.soundStatus = options.soundStatus;
     }
+
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
         this.load.image('char', 'assets/char.jpg');
@@ -16,12 +17,15 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('goal', 'assets/win.jpg');
         this.load.image('info', 'assets/textbox.jpg');
         this.load.image('block','assets/blocks/platform_standard_M.png');
+        this.load.audio('message', 'assets/audio/message.mp3');
     }
+
     create() {
         //Utility variables
         this.statusText = "";
         this.jumpCount = 0;
         this.coolDown = 0;
+        this.counter = 0;
         this.movementControls1 = "My ship may have crashed, but I can\nstill move...\n\n(Left arrow to move left\nRight arrow to move right)";
         this.movementControls2 = "The planet's environment is hostile...\nmy jetpack should keep me safe from\nthis lava.\n\n(Up arrow to jump,\nUp arrow again in midair to double jump)";
         this.movementControls3 = "This gap is too wide for my\njetpack's fuel cells,\nI'll have to activate my\naerial boosters.\n\n(Double tap left or right arrow to dash,\n2 second cooldown)";
@@ -43,6 +47,7 @@ export default class Level1 extends Phaser.Scene {
         this.platforms.create(980, 1100, 'platform').setScale(2, 20).refreshBody();
         this.platforms.create(1650, 950, 'platform').setScale(5, 3).refreshBody();
         this.goal.create(1800, 800, 'goal').setScale(5, 2).refreshBody();
+        this.messageSound = this.sound.add('message', {loop : false});
 
         //Create and configure player
         this.player = this.physics.add.sprite(75, 955, 'dude');
@@ -54,8 +59,6 @@ export default class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.platforms, this.player);
         this.physics.add.overlap(this.deathLava, this.player, this.death, null, this);
         this.physics.add.collider(this.goal, this.player, this.win, null, this);
-
-       
 
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
@@ -241,31 +244,60 @@ export default class Level1 extends Phaser.Scene {
                 this.coolDown = this.time.now;
             }
         }
-        
+
         //Draw and move tutorial text based on player location
-        if(this.player.x < 400)
+        if(this.player.x < 400 && this.player.x > 0)
         {
             this.tutorialInfo.x = 200;
             this.statusText.setText(this.movementControls1);
             this.statusText.x = 10;
+
+            if(this.soundStatus == true && this.counter == 0)
+            {
+                console.log("TESTING");
+                this.messageSound.play();
+                this.counter++;
+            }
         }
         else if(this.player.x >= 400 && this.player.x < 900)
         {
+
             this.tutorialInfo.x = 700;
             this.statusText.setText(this.movementControls2);
             this.statusText.x = 510;
+
+            if(this.soundStatus == true && this.counter == 1)
+            {
+                console.log("TESTING");
+                this.messageSound.play();
+                this.counter++;
+            }
         }
         else if(this.player.x >= 900 && this.player.x < 1450)
         {
             this.tutorialInfo.x = 1200;
             this.statusText.setText(this.movementControls3);
             this.statusText.x = 1010;
+
+            if(this.soundStatus == true && this.counter == 2)
+            {
+                console.log("TESTING");
+                this.messageSound.play();
+                this.counter++;
+            }
         }
         else
         {
             this.tutorialInfo.x = 1600;
             this.statusText.setText(this.movementControls4);
             this.statusText.x = 1410;
+
+            if(this.soundStatus == true && this.counter == 3)
+            {
+                console.log("TESTING");
+                this.messageSound.play();
+                this.counter++;
+            }
         }
     }
 
