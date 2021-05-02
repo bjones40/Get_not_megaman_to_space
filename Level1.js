@@ -26,15 +26,15 @@ export default class Level1 extends Phaser.Scene {
         this.jumpCount = 0;
         this.coolDown = 0;
         this.counter = 0;
-        this.movementControls1 = "My ship may have crashed, but I can\nstill move...\n\n(Left arrow to move left\nRight arrow to move right)";
-        this.movementControls2 = "The planet's environment is hostile...\nmy jetpack should keep me safe from\nthis lava.\n\n(Up arrow to jump,\nUp arrow again in midair to double jump)";
-        this.movementControls3 = "This gap is too wide for my\njetpack's fuel cells,\nI'll have to activate my\naerial boosters.\n\n(Double tap left or right arrow to dash,\n2 second cooldown)";
-        this.movementControls4 = "That platform is emitting\npowerful energy, if I get on top of it,\nI should be able to use my teleporter!\n\n(Standing here clears the level!)";
+        this.movementControls1 = "My ship may have crashed, but I can\nstill move...\n\n(Press the left arrow to move left, and\n right arrow to move right)";
+        this.movementControls2 = "The planet's environment is hostile...\nmy jetpack should keep me safe from\nthis lava.\n\n(Press the up arrow to jump.\n Press the up arrow again in midair\n to double jump)";
+        this.movementControls3 = "This gap is too wide for my jetpack's \nfuel cells, I'll have to activate my\naerial boosters.\n\n(Double tap left or right arrow to dash\n(2 second cooldown))";
+        this.movementControls4 = "That platform is emitting powerful \nenergy. If I get on top of it,\nI should be able to use my teleporter!\n\n(Standing here clears the level!)";
 
         //Bind world objects
         this.add.image(0, 0, 'bg').setOrigin(0);
         this.tutorialInfo = this.add.image(200,400,'info').setScale(2,1);
-        this.statusText = this.add.text(10, 315, this.movementControls1, {color: 'black'});
+        this.statusText = this.add.text(10, 330, this.movementControls1, {color: 'white'});
         console.log("Sound status: "+this.soundStatus);
         this.platforms = this.physics.add.staticGroup();
         this.deathLava = this.physics.add.staticGroup();
