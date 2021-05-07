@@ -9,38 +9,33 @@ export default class LevelEX extends Phaser.Scene {
     }
     preload() {
         this.load.atlas('dude','assets/dude2.png','assets/dude2.json');
-        this.load.image('char','assets/char.jpg');
+        this.load.image('danger','assets/exassets/exdanger.jpg');
         this.load.image('platform', 'assets/platformg.jpg');
-        this.load.image('bg', 'assets/bgx.jpg');
-        this.load.image('lava', 'assets/lava.png');
-        this.load.image('goal', 'assets/win.jpg');
+        this.load.image('bg', 'assets/exassets/exbg.jpg');
+        this.load.image('floor', 'assets//exassets/exfloor.png');
+        this.load.image('goal', 'assets/exassets/exgoal.jpg');
+        this.load.image('info', 'assets/text/textbox.jpg');
+        this.load.image('coin', 'assets/exassets/excoin.png');
     }
 create() {
-    this.winText = "";
+    this.winText = "BUY DOGE COIN";
     this.jumpCount = 0;
     console.log("Sound status update:"+this.soundStatus);
-    this.wins = 0;
-    
-    this.add.image(400, 300, 'bg');
-    this.bouncer = this.physics.add.sprite(200,400,'platform').setScale(1,2);
+    this.add.image(0, 0, 'bg').setOrigin(0);
+    this.tutorialInfo = this.add.image(200,400,'info').setScale(2,1);
+    this.coinBuy = this.add.image(200,100,'coin').setScale(.5,.5);
+    this.coinBuy = this.add.image(1700,100,'coin').setScale(.5,.5);
+    this.statusText = this.add.text(10, 330, this.winText, {color: 'white'});
     this.platforms = this.physics.add.staticGroup();
     this.deathLava = this.physics.add.staticGroup();
     this.goal = this.physics.add.staticGroup();
 
-    this.deathLava.create(400, 586, 'lava').setScale(100, 5).refreshBody();
-    this.platforms.create(100, 600, 'platform').setScale(2, 10).refreshBody();
-    this.platforms.create(420, 600, 'platform').setScale(2, 15).refreshBody();
-    this.platforms.create(500, 600, 'platform').setScale(2, 20).refreshBody();
-    this.goal.create(700, 400, 'goal').setScale(5, 2).refreshBody();
-
-    this.bouncer.body.allowGravity = false;
-    this.bouncer.body.immovable = true;
-    this.bouncer.body.setBounce(2,2);
-    
-
+    this.platforms.create(1000, 1800, 'floor').setScale(1, 1).refreshBody();
+    this.deathLava.create(500, 1000, 'danger').setScale(.5, 1).refreshBody();
+    this.goal.create(1800, 850, 'goal').setScale(1, 1).refreshBody();
 
     this.player = this.physics.add.sprite(75, 485, 'dude');
-    this.player.setScale(.25);
+    this.player.setScale(.75);
     this.player.setBounce(0);
     this.player.body.setCollideWorldBounds(true,2,2);
 
@@ -49,9 +44,9 @@ create() {
     this.physics.add.collider(this.platforms, this.player);
     this.physics.add.overlap(this.deathLava, this.player, this.death,null,this);
     this.physics.add.collider(this.goal, this.player, this.win,null,this);
-    this.physics.add.collider(this.bouncer, this.player, this.bounce,null,this);
+   
 
-    this.winText = this.add.text(0,0,'OMEGALUL');
+    
     this.controls = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.anims.create({
@@ -127,7 +122,7 @@ update() {
             callback: () => {
                 this.winState = false;
                 this.player.x = 9999;
-                this.scene.start("Level2");
+                this.scene.start("primaryMenu");
             }
           })
     }
@@ -207,9 +202,7 @@ update() {
 
 //Win condition: land on end goal
 win(player, goal) {
-    if (this.player.body.touching.down) {
         this.winState = true;
-    }
 }
 //Lose condition: hit lava
 death(player, deathLava) {
