@@ -17,7 +17,7 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('bg', 'assets/bg.jpg');
         this.load.image('lava', 'assets/blocks/lava.jpg');
         this.load.image('goal', 'assets/win.jpg');
-        this.load.image('info', 'assets/textbox.jpg');
+        this.load.image('info', 'assets/text/textbox.jpg');
         this.load.image('block','assets/blocks/platform_standard_M.png');
         this.load.audio('message', 'assets/audio/message.mp3');
     }
