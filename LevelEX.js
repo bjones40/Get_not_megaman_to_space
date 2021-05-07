@@ -40,7 +40,7 @@ create() {
     this.player.setBounce(0);
     this.player.body.setCollideWorldBounds(true,2,2);
     if(this.soundStatus) {
-        this.mainMusic = this.sound.add("bgm", {volume: .5});
+        this.mainMusic = this.sound.add("bgm", {volume: .1});
         this.mainMusic.play();
     }
 
