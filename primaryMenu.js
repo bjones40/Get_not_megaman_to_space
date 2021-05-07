@@ -10,9 +10,9 @@ export default class primaryMenu extends Phaser.Scene {
     }
 
     preload(){
-      this.load.image('sbutton','assets/start.png');
-      this.load.image('obutton','assets/options2.png');
-      this.load.image('title', 'assets/spaceman.png');
+      this.load.image('sbutton','assets/text/start.png');
+      this.load.image('obutton','assets/text/options2.png');
+      this.load.image('title', 'assets/text/spaceman.png');
       this.load.image('titlebg', 'assets/titlebg.jpg');
       this.load.audio("mainMusic", "assets/audio/sample_music.mp3");
     }
@@ -27,8 +27,6 @@ export default class primaryMenu extends Phaser.Scene {
       this.gameButton = this.add.sprite(960, 450, 'sbutton').setInteractive();
       this.gameButton2 = this.add.sprite(960, 650, 'obutton').setInteractive();
       this.title = this.add.image(960, 200, 'title').setScale(2,2);
-  
-      //this.gameText = this.add.text(860, 200, 'S P A C E M A N', { fontSize: '32px', fill: '#fff' });
 
       //audio
       if(this.soundStatus){

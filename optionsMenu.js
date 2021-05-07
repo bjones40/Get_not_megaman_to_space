@@ -11,11 +11,11 @@ export default class optionsMenu extends Phaser.Scene {
 
   preload(){
     this.load.image('titlebg', 'assets/titlebg.jpg');
-    this.load.image('optionsmenu', 'assets/optionsmenu.png');
-    this.load.image('back', 'assets/back.png');
-    this.load.image('on','assets/soundOn.png');
-    this.load.image('off','assets/soundOff.png');
-    this.load.image('sound','assets/sound.png');
+    this.load.image('optionsmenu', 'assets/text/optionsmenu.png');
+    this.load.image('back', 'assets/text/back.png');
+    this.load.image('on','assets/text/soundOn.png');
+    this.load.image('off','assets/text/soundOff.png');
+    this.load.image('sound','assets/text/sound.png');
     this.load.audio("mainMusic", "assets/audio/sample_music.mp3");
   }
 
