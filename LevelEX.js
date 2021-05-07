@@ -16,6 +16,7 @@ export default class LevelEX extends Phaser.Scene {
         this.load.image('goal', 'assets/exassets/exgoal.jpg');
         this.load.image('info', 'assets/text/textbox.jpg');
         this.load.image('coin', 'assets/exassets/excoin.png');
+        this.load.audio('bgm', 'assets/exassets/exsong.mp3');
     }
 create() {
     this.winText = "BUY DOGE COIN";
@@ -38,7 +39,10 @@ create() {
     this.player.setScale(.75);
     this.player.setBounce(0);
     this.player.body.setCollideWorldBounds(true,2,2);
-
+    if(this.soundStatus) {
+        this.mainMusic = this.sound.add("bgm", {volume: .5});
+        this.mainMusic.play();
+    }
 
 
     this.physics.add.collider(this.platforms, this.player);
@@ -122,6 +126,7 @@ update() {
             callback: () => {
                 this.winState = false;
                 this.player.x = 9999;
+                this.mainMusic.stop();
                 this.scene.start("primaryMenu");
             }
           })
