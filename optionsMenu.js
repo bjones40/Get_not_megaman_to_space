@@ -2,22 +2,32 @@ export default class optionsMenu extends Phaser.Scene {
   constructor(){
     super('optionsMenu');
   }
+
   init(options)
   {
   this.soundStatus = options.soundStatus;
-    console.log("Sound update: "+this.soundStatus);
+    console.log("Sound update: " + this.soundStatus);
   }
+
   preload(){
-    this.load.image('rbutton','assets/return.png');
-    this.load.image('on','assets/ON.jpg');
-    this.load.image('off','assets/OFF.jpg');
+    this.load.image('titlebg', 'assets/titlebg.jpg');
+    this.load.image('optionsmenu', 'assets/text/optionsmenu.png');
+    this.load.image('back', 'assets/text/back.png');
+    this.load.image('on','assets/text/soundOn.png');
+    this.load.image('off','assets/text/soundOff.png');
+    this.load.image('sound','assets/text/sound.png');
     this.load.audio("mainMusic", "assets/audio/sample_music.mp3");
   }
+
   create(){
-    this.gameButton = this.add.sprite(960, 600, 'rbutton').setInteractive();
-    this.onButton = this.add.sprite(1100, 300, 'on').setInteractive();
-    this.offButton = this.add.sprite(1100, 300, 'off').setInteractive();
+    this.titlebg = this.add.image(960, 540, 'titlebg').setDisplaySize(window.innerWidth, window.innerHeight+200);
+    this.optionsTitle = this.add.image(960, 100, 'optionsmenu');
+    this.soundTitle = this.add.image(810, 300, 'sound');
+    this.onButton = this.add.sprite(1110, 300, 'on').setInteractive();
+    this.offButton = this.add.sprite(1110, 300, 'off').setInteractive();
+    this.gameButton = this.add.image(960, 600, 'back').setInteractive();
     this.mainMusic = this.sound.add("mainMusic");
+    
     if(this.soundStatus == true)
     {
       this.offButton.visible = false;
@@ -26,16 +36,13 @@ export default class optionsMenu extends Phaser.Scene {
       this.onButton.visible = false;
     }
     this.soundTemp = this.soundStatus;
- 
-    this.gameText = this.add.text(900, 100, 'OPTIONS', { fontSize: '32px', fill: '#fff' });
-    this.soundtext = this.add.text(800,300,'SOUND',{ fontSize: '32px', fill: '#fff' });
 
     this.onButton.on('pointerdown', function (pointer) {
       this.onButton.visible = false;
       this.offButton.visible = true;
       this.soundTemp = false;
       this.game.sound.stopAll();
-      console.log("Sound: "+this.soundTemp);
+      console.log("Sound: " + this.soundTemp);
     }.bind(this));
 
     this.offButton.on('pointerdown', function (pointer) {
@@ -43,11 +50,12 @@ export default class optionsMenu extends Phaser.Scene {
       this.onButton.visible = true;
       this.soundTemp = true;
       this.mainMusic.play();
-      console.log("Sound: "+this.soundTemp);
+      console.log("Sound: " + this.soundTemp);
     }.bind(this));
 
     this.gameButton.on('pointerdown', function (pointer) {
       this.scene.start('primaryMenu',{soundStatus: this.soundTemp});
     }.bind(this));
   }
+
 }
