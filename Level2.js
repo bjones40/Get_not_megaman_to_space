@@ -1,21 +1,22 @@
 export default class Level2 extends Phaser.Scene {
 
-    
     constructor() {
         super('Level2');
     }
+
     init(options){
         this.soundStatus = options.soundStatus;
     }
+
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
         this.load.image('char', 'assets/char.jpg');
         this.load.image('platform', 'assets/platformg.jpg');
-        this.load.image('bg', 'assets/bgx.jpg');
-        this.load.image('lava', 'assets/lava.png');
+        this.load.image('bg', 'assets/bg.jpg');
+        this.load.image('lava', 'assets/blocks/lava.jpg');
         this.load.image('goal', 'assets/win.jpg');
         this.load.image('spike', 'assets/spike.png');
-        this.load.image('movplatform', 'assets/platformg.jpg');
+        this.load.image('movplatform', 'assets/mp.png');
     }
     create() {
         //Utility variables
@@ -24,18 +25,18 @@ export default class Level2 extends Phaser.Scene {
         this.coolDown = 0;
 
         //Bind world objects
-        this.add.image(0, 0, 'bg').setOrigin(0);
+        this.background = this.add.image(0, 0, 'bg').setOrigin(0);
         this.platforms = this.physics.add.staticGroup();
         this.deathLava = this.physics.add.staticGroup();
-        this.goal = this.physics.add.staticGroup();
-        console.log("Sound update: "+this.soundStatus);
         this.spike = this.physics.add.staticGroup();
+        this.goal = this.physics.add.staticGroup();
+        console.log("Sound update: " + this.soundStatus);
 
         //Create world objects
-        this.deathLava.create(960, 960, 'lava').setScale(200, 5).refreshBody();
+        this.deathLava.create(400,1050, 'lava').setScale(1000, 6).refreshBody();
 
         //test moving platform
-        this.movplatform = this.physics.add.image(1100, 900, 'movplatform')
+        this.movplatform = this.physics.add.sprite(1100, 900, 'movplatform')
             .setVelocity(100,-100);
 
         this.movplatform.setImmovable(true);
