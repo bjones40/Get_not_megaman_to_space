@@ -1,25 +1,24 @@
 export default class optionsMenu extends Phaser.Scene {
-  constructor(){
+  constructor() {
     super('optionsMenu');
   }
 
-  init(options)
-  {
-  this.soundStatus = options.soundStatus;
+  init(options) {
+    this.soundStatus = options.soundStatus;
     console.log("Sound update: " + this.soundStatus);
   }
 
-  preload(){
+  preload() {
     this.load.image('titlebg', 'assets/titlebg.jpg');
     this.load.image('optionsmenu', 'assets/text/optionsmenu.png');
     this.load.image('back', 'assets/text/back.png');
     this.load.image('on','assets/text/soundOn.png');
     this.load.image('off','assets/text/soundOff.png');
     this.load.image('sound','assets/text/sound.png');
-    this.load.audio("mainMusic", "assets/audio/sample_music.mp3");
+    this.load.audio("mainMusic", 'assets/audio/sample_music.mp3');
   }
 
-  create(){
+  create() {
     this.titlebg = this.add.image(960, 540, 'titlebg').setDisplaySize(window.innerWidth, window.innerHeight+200);
     this.optionsTitle = this.add.image(960, 100, 'optionsmenu');
     this.soundTitle = this.add.image(810, 300, 'sound');
@@ -27,14 +26,15 @@ export default class optionsMenu extends Phaser.Scene {
     this.offButton = this.add.sprite(1110, 300, 'off').setInteractive();
     this.gameButton = this.add.image(960, 600, 'back').setInteractive();
     this.mainMusic = this.sound.add("mainMusic");
+
+    if(this.soundStatus) {
+      this.mainMusic = this.sound.add("mainMusic", {volume: .5});
+      this.mainMusic.play();
+    } else { this.mainMusic.stop(); }
     
-    if(this.soundStatus == true)
-    {
+    if(this.soundStatus) {
       this.offButton.visible = false;
-    }
-    else{
-      this.onButton.visible = false;
-    }
+    } else { this.onButton.visible = false; }
     this.soundTemp = this.soundStatus;
 
     this.onButton.on('pointerdown', function (pointer) {
@@ -54,6 +54,7 @@ export default class optionsMenu extends Phaser.Scene {
     }.bind(this));
 
     this.gameButton.on('pointerdown', function (pointer) {
+      this.mainMusic.stop();
       this.scene.start('primaryMenu',{soundStatus: this.soundTemp});
     }.bind(this));
   }

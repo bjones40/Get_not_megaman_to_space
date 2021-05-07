@@ -11,11 +11,13 @@ export default class Level1 extends Phaser.Scene {
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
         this.load.image('char', 'assets/char.jpg');
-        this.load.image('platform', 'assets/platform.jpg');
+        this.load.image('lgplatform', 'assets/lp.png');
+        this.load.image('mdplatform', 'assets/mp.png');
+        this.load.image('smplatform', 'assets/sp.png');
         this.load.image('bg', 'assets/bg.jpg');
         this.load.image('lava', 'assets/blocks/lava.jpg');
         this.load.image('goal', 'assets/win.jpg');
-        this.load.image('info', 'assets/textbox.jpg');
+        this.load.image('info', 'assets/text/textbox.jpg');
         this.load.image('block','assets/blocks/platform_standard_M.png');
         this.load.audio('message', 'assets/audio/message.mp3');
     }
@@ -35,22 +37,26 @@ export default class Level1 extends Phaser.Scene {
         this.add.image(0, 0, 'bg').setOrigin(0);
         this.tutorialInfo = this.add.image(200,400,'info').setScale(2,1);
         this.statusText = this.add.text(10, 330, this.movementControls1, {color: 'white'});
-        console.log("Sound status: "+this.soundStatus);
+        console.log("Sound status: " + this.soundStatus);
         this.platforms = this.physics.add.staticGroup();
         this.deathLava = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
-
+        
         //Create world objects
         this.deathLava.create(400,1050, 'lava').setScale(1000, 6).refreshBody();
-        this.platforms.create(45, 1050, 'platform').setScale(20, 8).refreshBody();
-        this.platforms.create(900, 1100, 'platform').setScale(2, 15).refreshBody();
-        this.platforms.create(980, 1100, 'platform').setScale(2, 20).refreshBody();
-        this.platforms.create(1650, 950, 'platform').setScale(5, 3).refreshBody();
+        this.platforms.create(220, 1000, 'mdplatform').setScale(1.8,1.5).refreshBody();
+        this.platforms.create(800, 900, 'smplatform').refreshBody();
+        this.platforms.create(920, 900, 'smplatform').refreshBody();
+        this.platforms.create(1500, 860, 'mdplatform').setScale(1.2,1.5).refreshBody();
+    
         this.goal.create(1800, 800, 'goal').setScale(5, 2).refreshBody();
-        this.messageSound = this.sound.add('message', {loop : false});
+        this.messageSound = this.sound.add('message', {
+            loop : false,
+            volume : .3
+        });
 
         //Create and configure player
-        this.player = this.physics.add.sprite(75, 955, 'dude');
+        this.player = this.physics.add.sprite(75, 920, 'dude');
         this.player.setScale(2);
         this.player.setBounce(0.3);
         this.player.setCollideWorldBounds(true);
@@ -122,8 +128,6 @@ export default class Level1 extends Phaser.Scene {
             key: 'dash',
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1,end: 2, zeroPad: 3}),frameRate: 5
         });
-
-
     }
 
     update() {
@@ -133,7 +137,6 @@ export default class Level1 extends Phaser.Scene {
         const leftPress = Phaser.Input.Keyboard.JustDown(this.controls.left);
         const touchFloor = this.player.body.touching.down;
         this.changeAnimations = false;
-        
 
         //Gameover Check
         this.gameOver;
@@ -150,7 +153,6 @@ export default class Level1 extends Phaser.Scene {
                     this.gameOver = false;  
                 }
               })
-   
         }
         
         //Evaluate winstate for animation
@@ -169,6 +171,7 @@ export default class Level1 extends Phaser.Scene {
                 }
               })
         }
+
         //Basic Movement and animation binding
         if (this.controls.left.isDown) {
             this.player.setVelocityX(-160);
