@@ -16,6 +16,7 @@ export default class optionsMenu extends Phaser.Scene {
     this.load.image('off','assets/text/soundOff.png');
     this.load.image('sound','assets/text/sound.png');
     this.load.audio("mainMusic", 'assets/audio/sample_music.mp3');
+    this.load.image('secret', 'assets/retired/platformg.jpg');
   }
 
   create() {
@@ -25,6 +26,7 @@ export default class optionsMenu extends Phaser.Scene {
     this.onButton = this.add.sprite(1110, 300, 'on').setInteractive();
     this.offButton = this.add.sprite(1110, 300, 'off').setInteractive();
     this.gameButton = this.add.image(960, 600, 'back').setInteractive();
+    this.secretButton = this.add.image(10,10,'secret').setInteractive();
     this.mainMusic = this.sound.add("mainMusic");
 
     if(this.soundStatus) {
@@ -56,6 +58,11 @@ export default class optionsMenu extends Phaser.Scene {
     this.gameButton.on('pointerdown', function (pointer) {
       this.mainMusic.stop();
       this.scene.start('primaryMenu',{soundStatus: this.soundTemp});
+    }.bind(this));
+
+    this.secretButton.on('pointerdown', function (pointer) {
+      this.mainMusic.stop();
+      this.scene.start('LevelEX',{soundStatus: this.soundTemp});
     }.bind(this));
   }
 
