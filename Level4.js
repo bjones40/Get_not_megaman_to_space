@@ -98,7 +98,7 @@ export default class Level4 extends Phaser.Scene {
         this.spike.create(800,465,'spike').setScale(0.6,0.6).refreshBody();
         this.spike.create(900,500,'spike').setScale(0.6,0.6).refreshBody();
        
-        this.goal.create(1800, 400, 'goal').setScale(5, 2).refreshBody();
+        this.goal.create(1800, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
         //Create and configure player
         this.player = this.physics.add.sprite(50, 730, 'dude');

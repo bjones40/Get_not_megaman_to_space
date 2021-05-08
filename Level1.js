@@ -16,7 +16,7 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('smplatform', 'assets/sp.png');
         this.load.image('bg', 'assets/bg.jpg');
         this.load.image('lava', 'assets/blocks/lava.jpg');
-        this.load.image('goal', 'assets/win.jpg');
+        this.load.image('goal', 'assets/teleport.png');
         this.load.image('info', 'assets/text/textbox.jpg');
         this.load.image('block','assets/blocks/platform_standard_M.png');
         this.load.audio('message', 'assets/audio/message.mp3');
@@ -49,7 +49,7 @@ export default class Level1 extends Phaser.Scene {
         this.platforms.create(920, 900, 'smplatform').refreshBody();
         this.platforms.create(1500, 860, 'mdplatform').setScale(1.2,1.5).refreshBody();
     
-        this.goal.create(1800, 800, 'goal').setScale(5, 2).refreshBody();
+        this.goal.create(1800, 800, 'goal').setScale(0.9, 0.9).refreshBody();
         this.messageSound = this.sound.add('message', {
             loop : false,
             volume : .3

@@ -14,7 +14,7 @@ export default class Level2 extends Phaser.Scene {
         this.load.image('platform', 'assets/platformg.jpg');
         this.load.image('bg', 'assets/bg.jpg');
         this.load.image('lava', 'assets/blocks/lava.jpg');
-        this.load.image('goal', 'assets/win.jpg');
+        this.load.image('goal', 'assets/teleport.png');
         this.load.image('spike', 'assets/spike.png');
         this.load.image('movplatform', 'assets/mp.png');
     }
@@ -69,7 +69,7 @@ export default class Level2 extends Phaser.Scene {
         this.spike.create(250,700,'spike').setScale(0.6,0.6).refreshBody();
         this.spike.create(250,840,'spike').setScale(0.6,0.6).refreshBody();
         
-        this.goal.create(700, 400, 'goal').setScale(5, 2).refreshBody();
+        this.goal.create(700, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
         //Create and configure player
         this.player = this.physics.add.sprite(50, 730, 'dude');
