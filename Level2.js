@@ -192,7 +192,7 @@ export default class Level2 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    this.scene.start("LevelEX",{soundStatus: this.soundStatus});
+                    this.scene.start("Level3",{soundStatus: this.soundStatus});
                 }
               })
         }
