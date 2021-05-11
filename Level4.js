@@ -18,6 +18,7 @@ export default class Level4 extends Phaser.Scene {
         this.load.image('movplatform', 'assets/platformg.jpg');
         this.load.image('movplatform2', 'assets/platformg.jpg');
         this.load.image('movplatform3', 'assets/platformg.jpg');
+        this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
     }
     create() {
         //Utility variables
@@ -32,6 +33,11 @@ export default class Level4 extends Phaser.Scene {
         this.goal = this.physics.add.staticGroup();
         console.log("Sound update: "+this.sound);
         this.spike = this.physics.add.staticGroup();
+
+        this.jetpack = this.sound.add('jetpack', {
+            loop : false,
+            volume : .1
+        });
 
         //Create world objects
         this.deathLava.create(960, 960, 'lava').setScale(200, 5).refreshBody();
@@ -267,11 +273,13 @@ export default class Level4 extends Phaser.Scene {
 
         //Double jump
         if (upPress && touchFloor) {
+            if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             this.statusText.setText(this.jumpCount);
         }
         else if(upPress && (!touchFloor && this.jumpCount < 2)) {
+            if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             this.statusText.setText(this.jumpCount);

@@ -20,6 +20,7 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('block','assets/blocks/platform_standard_M.png');
         this.load.image('ship', 'assets/ship2.png');
         this.load.audio('message', 'assets/audio/message.mp3');
+        this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
     }
 
     create() {
@@ -54,6 +55,10 @@ export default class Level1 extends Phaser.Scene {
         this.messageSound = this.sound.add('message', {
             loop : false,
             volume : .3
+        });
+        this.jetpack = this.sound.add('jetpack', {
+            loop : false,
+            volume : .1
         });
 
         //Create and configure player
@@ -168,6 +173,7 @@ export default class Level1 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
+                    //this.game.sound.stopAll();
                     this.scene.start('Level2',{soundStatus: this.soundStatus});
                 }
               })
@@ -213,11 +219,13 @@ export default class Level1 extends Phaser.Scene {
 
         //Double jump
         if (upPress && touchFloor) {
+            if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             this.statusText.setText(this.jumpCount);
         }
         else if(upPress && (!touchFloor && this.jumpCount < 2)) {
+            if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             this.statusText.setText(this.jumpCount);
@@ -310,6 +318,7 @@ export default class Level1 extends Phaser.Scene {
     //Lose condition: hit lava
     death(player, deathLava) {
         this.physics.pause();
+        this.messageSound.stop();
         this.gameOver = true;
     }
 }
