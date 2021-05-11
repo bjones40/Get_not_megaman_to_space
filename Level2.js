@@ -64,10 +64,10 @@ export default class Level2 extends Phaser.Scene {
         
 
         //spikes
-        this.spike.create(250,660,'spike').setScale(0.6,0.6).refreshBody();
-        this.spike.create(250,700,'spike').setScale(0.6,0.6).refreshBody();
-        this.spike.create(250,700,'spike').setScale(0.6,0.6).refreshBody();
-        this.spike.create(250,840,'spike').setScale(0.6,0.6).refreshBody();
+        this.spike.create(250,660,'spike').setScale(0.5,0.5).refreshBody();
+        this.spike.create(250,700,'spike').setScale(0.5,0.5).refreshBody();
+        this.spike.create(250,700,'spike').setScale(0.5,0.5).refreshBody();
+        this.spike.create(250,840,'spike').setScale(0.5,0.5).refreshBody();
         
         this.goal.create(700, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
@@ -192,7 +192,7 @@ export default class Level2 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    this.scene.start("LevelEX",{soundStatus: this.soundStatus});
+                    this.scene.start("Level3",{soundStatus: this.soundStatus});
                 }
               })
         }

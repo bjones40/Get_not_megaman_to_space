@@ -18,6 +18,7 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('goal', 'assets/teleport.png');
         this.load.image('info', 'assets/text/textbox.jpg');
         this.load.image('block','assets/blocks/platform_standard_M.png');
+        this.load.image('ship', 'assets/ship2.png');
         this.load.audio('message', 'assets/audio/message.mp3');
     }
 
@@ -34,6 +35,7 @@ export default class Level1 extends Phaser.Scene {
 
         //Bind world objects
         this.add.image(0, 0, 'bg').setOrigin(0);
+        this.add.image(100,800,'ship');
         this.tutorialInfo = this.add.image(200,400,'info').setScale(2,1);
         this.statusText = this.add.text(10, 330, this.movementControls1, {color: 'white'});
         console.log("Sound status: " + this.soundStatus);
@@ -46,7 +48,7 @@ export default class Level1 extends Phaser.Scene {
         this.platforms.create(220, 1000, 'mdplatform').setScale(1.8,1.5).refreshBody();
         this.platforms.create(800, 900, 'smplatform').refreshBody();
         this.platforms.create(920, 900, 'smplatform').refreshBody();
-        this.platforms.create(1500, 860, 'mdplatform').setScale(1.2,1.5).refreshBody();
+        this.platforms.create(1600, 860, 'mdplatform').setScale(1.2,1.5).refreshBody();
     
         this.goal.create(1800, 800, 'goal').setScale(0.9, 0.9).refreshBody();
         this.messageSound = this.sound.add('message', {
