@@ -20,7 +20,7 @@ export default class optionsMenu extends Phaser.Scene {
   }
 
   create() {
-    this.titlebg = this.add.image(960, 540, 'titlebg').setDisplaySize(window.innerWidth, window.innerHeight+200);
+    this.titlebg = this.add.image(0, 0, 'titlebg').setDisplaySize(window.innerWidth, window.innerHeight+200).setOrigin(0);
     this.optionsTitle = this.add.image(960, 100, 'optionsmenu');
     this.soundTitle = this.add.image(810, 300, 'sound');
     this.onButton = this.add.sprite(1110, 300, 'on').setInteractive();

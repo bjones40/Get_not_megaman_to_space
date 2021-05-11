@@ -1,5 +1,4 @@
 export default class Level1 extends Phaser.Scene {
-
     constructor() {
         super('Level1');
     }
@@ -257,7 +256,6 @@ export default class Level1 extends Phaser.Scene {
 
             if(this.soundStatus == true && this.counter == 0)
             {
-                console.log("TESTING");
                 this.messageSound.play();
                 this.counter++;
             }

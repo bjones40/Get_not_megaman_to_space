@@ -17,11 +17,12 @@
     <script type="module">
     import primaryMenu from "./primaryMenu.js";
     import optionsMenu from "./optionsMenu.js";
+    import Intro from "./Intro.js";
     import Level1 from "./Level1.js";
     import Level2 from "./Level2.js";
     import LevelEX from "./LevelEX.js";
     
-   var config = {
+    var config = {
             type: Phaser.AUTO,
             width: 1920,
             height: 1080,
@@ -39,7 +40,7 @@
                     debug: false
                 }
             },
-            scene: [primaryMenu,optionsMenu,Level1,Level2,LevelEX]
+            scene: [primaryMenu,optionsMenu,Intro,Level1,Level2,LevelEX]
         };
 
         var game = new Phaser.Game(config);
