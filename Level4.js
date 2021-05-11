@@ -9,15 +9,18 @@ export default class Level4 extends Phaser.Scene {
     }
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
-        this.load.image('char', 'assets/char.jpg');
-        this.load.image('platform', 'assets/platformg.jpg');
-        this.load.image('bg', 'assets/bgx.jpg');
-        this.load.image('lava', 'assets/lava.png');
-        this.load.image('goal', 'assets/win.jpg');
+        //this.load.image('char', 'assets/char.jpg');
+        //this.load.image('platform', 'assets/platformg.jpg');
+        this.load.image('bg', 'assets/bg.jpg');
+        this.load.image('lava', 'assets/blocks/lava.jpg');
+        this.load.image('goal', 'assets/teleport.png');
         this.load.image('spike', 'assets/spike.png');
-        this.load.image('movplatform', 'assets/platformg.jpg');
-        this.load.image('movplatform2', 'assets/platformg.jpg');
-        this.load.image('movplatform3', 'assets/platformg.jpg');
+        this.load.image('movplatform', 'assets/mp.png');
+        this.load.image('movplatform2', 'assets/mp.png');
+        this.load.image('movplatform3', 'assets/mp.png');
+        this.load.image('brock', 'assets/blocks/rockbig.png');
+        this.load.image('mrock', 'assets/blocks/rockmed.png');
+        this.load.image('srock', 'assets/blocks/rocksmall.png');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
     }
     create() {
