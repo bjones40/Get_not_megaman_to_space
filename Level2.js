@@ -10,13 +10,18 @@ export default class Level2 extends Phaser.Scene {
 
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
-        this.load.image('char', 'assets/char.jpg');
-        this.load.image('platform', 'assets/platformg.jpg');
         this.load.image('bg', 'assets/bg.jpg');
         this.load.image('lava', 'assets/blocks/lava.jpg');
         this.load.image('goal', 'assets/teleport.png');
+        this.load.image('info', 'assets/text/textbox.jpg');
         this.load.image('spike', 'assets/spike.png');
         this.load.image('movplatform', 'assets/mp.png');
+        this.load.image('brock', 'assets/blocks/rockbig.png');
+        this.load.image('mrock', 'assets/blocks/rockmed.png');
+        this.load.image('srock', 'assets/blocks/rocksmall.png');
+        this.load.image('sp', 'assets/sp.png');
+        this.load.image('crystal', 'assets/crystal.png');
+        this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
     }
     create() {
@@ -24,6 +29,8 @@ export default class Level2 extends Phaser.Scene {
         this.statusText = "";
         this.jumpCount = 0;
         this.coolDown = 0;
+        this.prompt1 = "The low gravity seems to be causing\na bunch of things to float around.\nBut are those spikes?...\nI should probably avoid those...";
+        this.prompt2 = "What was that I saw back there?...\nSomething blue and glowing?";
 
         //Bind world objects
         this.background = this.add.image(0, 0, 'bg').setOrigin(0);
@@ -32,6 +39,12 @@ export default class Level2 extends Phaser.Scene {
         this.spike = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
         console.log("Sound update: " + this.soundStatus);
+        this.fakebox = this.add.image(380, 360, 'brock').setScale(0.3,0.3);
+
+        this.messageSound = this.sound.add('message', {
+            loop : false,
+            volume : .3
+        });
 
         this.jetpack = this.sound.add('jetpack', {
             loop : false,
@@ -40,15 +53,13 @@ export default class Level2 extends Phaser.Scene {
           
 
         //Create world objects
-        this.deathLava.create(400,1050, 'lava').setScale(1000, 6).refreshBody();
+        this.deathLava.create(400,1050, 'lava').setScale(1000, 6).refreshBody().setDepth(1);
 
-        //test moving platform
-        this.movplatform = this.physics.add.sprite(1100, 900, 'movplatform')
+        //moving platform
+        this.movplatform = this.physics.add.sprite(1400, 1000, 'movplatform')
             .setVelocity(100,-100);
-
         this.movplatform.setImmovable(true);
         this.movplatform.body.setAllowGravity(false);
-
         this.tweens.timeline({
             targets: this.movplatform.body.velocity,
             loop: -1,
@@ -59,37 +70,68 @@ export default class Level2 extends Phaser.Scene {
                 { x: 0, y:    0, duration: 1000, ease: 'Stepped'}
             ]
         });
-        
+
+        //moving spikes
+        this.spike1 = this.physics.add.sprite(250, 1050, 'spike').setScale(0.3,0.3)
+            .setVelocity(100,-100).setDepth(0);
+        this.spike1.setImmovable(true);
+        this.spike1.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.spike1.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: 0, y: -150, duration: 2400, ease: 'Stepped'},
+                { x: 0, y: 150, duration: 2400, ease: 'Stepped'},
+            ]
+        });
+
+        this.spike2 = this.physics.add.sprite(600, 600, 'spike').setScale(0.3,0.3)
+            .setVelocity(100,-100).setDepth(0);
+        this.spike2.setImmovable(true);
+        this.spike2.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.spike2.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: 0, y: 150, duration: 2400, ease: 'Stepped'},
+                { x: 0, y: -150, duration: 2400, ease: 'Stepped'},
+            ]
+        });
 
         //platforms left to right
-        this.platforms.create(0, 960, 'platform').setScale(5,8).refreshBody();
-        this.platforms.create(400, 960, 'platform').setScale(6,4).refreshBody();
-        this.platforms.create(400, 600, 'platform').setScale(6,1.5).refreshBody();
-        this.platforms.create(380, 500, 'platform').setScale(3,5).refreshBody();
-        this.platforms.create(750, 880, 'platform').setScale(2,6).refreshBody();
-        this.platforms.create(860, 880, 'platform').setScale(3,10).refreshBody();
-        
+        this.platforms.create(0, 940, 'brock').setScale(0.5,0.5).refreshBody();
+        this.platforms.create(400, 960, 'srock').setScale(.5,1).refreshBody();
+        this.platforms.create(380, 500, 'brock').setScale(.3,0.3).refreshBody();
+        this.platforms.create(380, 600, 'srock').setScale(.75,0.75).refreshBody();
+        this.platforms.create(750, 880, 'srock').setScale(0.5,0.4).refreshBody();
+        this.platforms.create(860, 880, 'brock').setScale(0.3,0.5).refreshBody();
 
+        this.platforms.create(1950, 780, 'brock').setScale(.5,1.5).refreshBody();
+        this.platforms.create(1850, 450, 'srock').setScale(.5,.5).refreshBody();
+        this.platforms.create(1500, 300, 'srock').setScale(.5,.3).refreshBody();
+        this.platforms.create(1000, 500, 'mrock').setScale(.4,.2).refreshBody();
+        
         //spikes
-        this.spike.create(250,660,'spike').setScale(0.5,0.5).refreshBody();
-        this.spike.create(250,700,'spike').setScale(0.5,0.5).refreshBody();
-        this.spike.create(250,700,'spike').setScale(0.5,0.5).refreshBody();
-        this.spike.create(250,840,'spike').setScale(0.5,0.5).refreshBody();
+        /*this.spike.create(250,660,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(250,700,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(250,840,'spike').setScale(0.3,0.3).refreshBody();*/
         
         this.goal.create(700, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
         //Create and configure player
-        this.player = this.physics.add.sprite(50, 730, 'dude');
+        this.player = this.physics.add.sprite(50, 750, 'dude');
         this.player.setScale(1.5);
         this.player.setBounce(0);
         this.player.setCollideWorldBounds(true);
 
         //Add colliders between objects
         this.physics.add.collider(this.platforms, this.player);
-        this.physics.add.overlap(this.deathLava, this.player, this.death, null, this);
+        this.physics.add.collider(this.movplatform, this.player);
         this.physics.add.collider(this.goal, this.player, this.win, null, this);
-        this.physics.add.overlap(this.player, this.spike, this.death, null, this);
-        this.physics.add.collider(this.player,this.movplatform);
+        this.physics.add.overlap(this.deathLava, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike1, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike2, this.player, this.death, null, this);
+        
 
         this.statusText = this.add.text(0, 0, 'Free Real-estate');
 
@@ -155,8 +197,6 @@ export default class Level2 extends Phaser.Scene {
             key: 'dash',
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1,end: 2, zeroPad: 3}),frameRate: 5
         });
-
-
     }
 
 
@@ -168,7 +208,6 @@ export default class Level2 extends Phaser.Scene {
         const touchFloor = this.player.body.touching.down;
         this.changeAnimations = false;
         
-
         //Gameover Check
         this.gameOver;
         if (this.gameOver) {
@@ -189,8 +228,7 @@ export default class Level2 extends Phaser.Scene {
         
         //Evaluate winstate for animation
         this.winState;
-        if(this.winState)
-        {
+        if(this.winState) {
             this.physics.pause();
             this.changeAnimations = true;
             this.player.anims.play('teleport',true);
@@ -278,21 +316,23 @@ export default class Level2 extends Phaser.Scene {
                 this.player.anims.play('dash',true)
                 this.player.setVelocityX(4000);
                 this.coolDown = this.time.now;
+            }
         }
-    }
 
-    
+        
     }
-
     //Win condition: land on end goal
     win(player, goal) {
-        if (this.player.body.touching.down) {
+        if(this.player.body.touching.down) {
             this.winState = true;
         }
     }
+
     //Lose condition: hit lava
     death(player, deathLava) {
         this.physics.pause();
         this.gameOver = true;
     }
+
 }
+

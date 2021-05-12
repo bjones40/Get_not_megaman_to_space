@@ -21,7 +21,7 @@ export default class Intro extends Phaser.Scene {
 
         this.typingSound = this.sound.add('typing', {
             loop : true,
-            volume : .08
+            volume : .05
         });
         this.alarm = this.sound.add('alarm', {
             loop : true,
@@ -33,7 +33,7 @@ export default class Intro extends Phaser.Scene {
         });
         this.gameMusic = this.sound.add('gameMusic', {
             loop : true,
-            volume : .1
+            volume : .08
         });
 
         console.log("Sound status: " + this.soundStatus);
@@ -48,8 +48,6 @@ export default class Intro extends Phaser.Scene {
  
         this.label = this.add.text(960, 400, '', { fontSize: 24 }).setOrigin(.5);
         this.typeWrite(this.alertText);
-
-
     }
 
     update() {    
