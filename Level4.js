@@ -16,7 +16,10 @@ export default class Level4 extends Phaser.Scene {
         this.load.image('goal', 'assets/teleport.png');
         this.load.image('spike', 'assets/spike.png');
         this.load.image('movplatform', 'assets/mp.png');
+        this.load.image('lgplatform', 'assets/lp.png');
+        this.load.image('mdplatform', 'assets/mp.png');
         this.load.image('movplatform2', 'assets/mp.png');
+        this.load.image('smplatform', 'assets/sp.png');
         this.load.image('movplatform3', 'assets/mp.png');
         this.load.image('brock', 'assets/blocks/rockbig.png');
         this.load.image('mrock', 'assets/blocks/rockmed.png');
@@ -46,11 +49,11 @@ export default class Level4 extends Phaser.Scene {
         this.deathLava.create(960, 960, 'lava').setScale(200, 5).refreshBody();
 
         //test moving platform
-        this.movplatform = this.physics.add.image(1400, 900, 'movplatform')
+        this.movplatform = this.physics.add.image(1400, 900, 'smplatform')
             .setVelocity(100,-100);
-        this.movplatform2 = this.physics.add.image(300, 900, 'movplatform2')
+        this.movplatform2 = this.physics.add.image(300, 900, 'smplatform')
             .setVelocity(100,-100);
-        this.movplatform3 = this.physics.add.image(1700, 500, 'movplatform3')
+        this.movplatform3 = this.physics.add.image(1700, 500, 'smplatform')
             .setVelocity(100,-100);
 
         this.movplatform.setImmovable(true);
@@ -93,19 +96,19 @@ export default class Level4 extends Phaser.Scene {
             ]
         });
         //platforms left to right
-        this.platforms.create(600, 400, 'platform').setScale(5,6).refreshBody();
-        this.platforms.create(1100, 500, 'platform').setScale(4,4).refreshBody();
-        this.platforms.create(50, 800, 'platform').setScale(3,1.5).refreshBody();
+        this.platforms.create(600, 400, 'mdplatform').setScale(1.0,1.4).refreshBody();
+        this.platforms.create(1100, 500, 'mdplatform').setScale(1.1,1.5).refreshBody();
+        this.platforms.create(50, 800, 'smplatform').refreshBody();
         //this.platforms.create(500, 500, 'platform').setScale(3,5).refreshBody();
         //this.platforms.create(750, 880, 'platform').setScale(2,6).refreshBody();
-        this.platforms.create(880, 800, 'platform').setScale(3,7).refreshBody();
+        this.platforms.create(880, 800, 'mdplatform').setScale(1.2,1.5).refreshBody();
         
 
         //spikes
-        this.spike.create(1685,360,'spike').setScale(0.6,0.6).refreshBody();
-        this.spike.create(1725,325,'spike').setScale(0.6,0.6).refreshBody();
-        this.spike.create(800,465,'spike').setScale(0.6,0.6).refreshBody();
-        this.spike.create(900,500,'spike').setScale(0.6,0.6).refreshBody();
+        this.spike.create(1685,340,'spike').setScale(0.4,0.4).refreshBody();
+        this.spike.create(1725,310,'spike').setScale(0.4,0.4).refreshBody();
+        this.spike.create(800,465,'spike').setScale(0.4,0.4).refreshBody();
+        this.spike.create(900,500,'spike').setScale(0.4,0.4).refreshBody();
        
         this.goal.create(1800, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
