@@ -20,6 +20,8 @@ export default class LevelEX extends Phaser.Scene {
         this.load.image('coin', 'assets/exassets/excoin.png');
         this.load.image('arrow','assets/exassets/exarrow.png');
         this.load.audio('bgm', 'assets/exassets/exsong.mp3');
+        this.load.audio('died', 'assets/audio/death.mp3');
+        this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
     }
 create() {
     //misc variables
@@ -85,9 +87,18 @@ create() {
 
     //music initilization
     if(this.soundStatus && this.deathCount == 0) {
-        this.mainMusic = this.sound.add("bgm", {volume: .1});
+        this.mainMusic = this.sound.add("bgm", {volume: .1,loop: true});
         this.mainMusic.play();
     }
+    this.jetpack = this.sound.add('jetpack', {
+        loop : false,
+        volume : .1
+    });
+    this.deathSound = this.sound.add('died', {
+        loop : false,
+        volume : .1
+    });
+
 
     //colliders
     this.physics.add.collider(this.platforms, this.player);
@@ -172,20 +183,23 @@ update() {
     this.gameOver;
     if (this.gameOver) {
         this.changeAnimations = true;
-        this.deathCount++;
+        if(this.soundStatus)
+        {
+            this.deathSound.play();
+        }
         this.player.anims.play('death',true);
         this.time.addEvent({
-            delay: 400,
-            callback: () => {
-                this.player.x = 9999;
-                this.registry.destroy();
-                this.events.off();
-                this.scene.stop();
-                this.scene.start("LevelEX", {soundStatus: this.soundStatus, dCount: this.deathCount})
-                this.gameOver = false;  
+        delay: 400,
+        callback: () => {
+            this.player.x = 9999;
+            this.deathCount++;
+            this.registry.destroy();
+            this.events.off();
+            this.scene.stop();
+            this.scene.start("LevelEX", {soundStatus: this.soundStatus, dCount: this.deathCount});
+            this.gameOver = false;  
             }
-          })
-
+        })
     }
     
     //Evaluate winstate for animation

@@ -23,6 +23,7 @@ export default class Level2 extends Phaser.Scene {
         this.load.image('crystal', 'assets/crystal.png');
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
+        this.load.audio('died', 'assets/audio/death.mp3');
     }
     create() {
         //Utility variables
@@ -47,6 +48,10 @@ export default class Level2 extends Phaser.Scene {
         });
 
         this.jetpack = this.sound.add('jetpack', {
+            loop : false,
+            volume : .1
+        });
+        this.deathSound = this.sound.add('died', {
             loop : false,
             volume : .1
         });
@@ -208,22 +213,24 @@ export default class Level2 extends Phaser.Scene {
         const touchFloor = this.player.body.touching.down;
         this.changeAnimations = false;
         
-        //Gameover Check
         this.gameOver;
         if (this.gameOver) {
             this.changeAnimations = true;
+            if(this.soundStatus)
+            {
+                this.deathSound.play();
+            }
             this.player.anims.play('death',true);
             this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    this.player.x = 9999;
-                    this.registry.destroy();
-                    this.events.off();
-                    this.scene.restart();
-                    this.gameOver = false;  
+            delay: 400,
+            callback: () => {
+                this.player.x = 9999;
+                this.registry.destroy();
+                this.events.off();
+                this.scene.restart();
+                this.gameOver = false;  
                 }
-              })
-   
+            })
         }
         
         //Evaluate winstate for animation

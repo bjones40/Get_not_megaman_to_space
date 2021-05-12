@@ -9,7 +9,6 @@ export default class Level1 extends Phaser.Scene {
 
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
-        this.load.image('char', 'assets/char.jpg');
         this.load.image('lgplatform', 'assets/lp.png');
         this.load.image('mdplatform', 'assets/mp.png');
         this.load.image('smplatform', 'assets/sp.png');
@@ -21,6 +20,7 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('ship', 'assets/ship2.png');
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
+        this.load.audio('died', 'assets/audio/death.mp3');
     }
 
     create() {
@@ -57,6 +57,10 @@ export default class Level1 extends Phaser.Scene {
             volume : .3
         });
         this.jetpack = this.sound.add('jetpack', {
+            loop : false,
+            volume : .1
+        });
+        this.deathSound = this.sound.add('died', {
             loop : false,
             volume : .1
         });
@@ -148,17 +152,21 @@ export default class Level1 extends Phaser.Scene {
         this.gameOver;
         if (this.gameOver) {
             this.changeAnimations = true;
+            if(this.soundStatus)
+            {
+                this.deathSound.play();
+            }
             this.player.anims.play('death',true);
             this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    this.player.x = 9999;
-                    this.registry.destroy();
-                    this.events.off();
-                    this.scene.restart();
-                    this.gameOver = false;  
+            delay: 400,
+            callback: () => {
+                this.player.x = 9999;
+                this.registry.destroy();
+                this.events.off();
+                this.scene.restart();
+                this.gameOver = false;  
                 }
-              })
+            })
         }
         
         //Evaluate winstate for animation

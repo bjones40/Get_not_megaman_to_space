@@ -24,8 +24,8 @@ export default class Level3 extends Phaser.Scene {
         this.load.image('lp', 'assets/lp.png');
         this.load.image('mp', 'assets/mp.png');
         this.load.image('sp', 'assets/sp.png');
-
-
+        this.load.audio('died', 'assets/audio/death.mp3');
+        this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
     }
     create() {
         //Utility variables
@@ -115,6 +115,15 @@ export default class Level3 extends Phaser.Scene {
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        //Bind sounds
+        this.deathSound = this.sound.add('died', {
+            loop : false,
+            volume : .1
+        });
+        this.jetpack = this.sound.add('jetpack', {
+            loop : false,
+            volume : .1
+        });
 
         //Bind animations
         this.anims.create({
@@ -192,18 +201,21 @@ export default class Level3 extends Phaser.Scene {
         this.gameOver;
         if (this.gameOver) {
             this.changeAnimations = true;
+            if(this.soundStatus)
+            {
+                this.deathSound.play();
+            }
             this.player.anims.play('death',true);
             this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    this.player.x = 9999;
-                    this.registry.destroy();
-                    this.events.off();
-                    this.scene.restart();
-                    this.gameOver = false;  
+            delay: 400,
+            callback: () => {
+                this.player.x = 9999;
+                this.registry.destroy();
+                this.events.off();
+                this.scene.restart();
+                this.gameOver = false;  
                 }
-              })
-   
+            })
         }
         
         //Evaluate winstate for animation
@@ -262,11 +274,13 @@ export default class Level3 extends Phaser.Scene {
 
         //Double jump
         if (upPress && touchFloor) {
+            if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             this.statusText.setText(this.jumpCount);
         }
         else if(upPress && (!touchFloor && this.jumpCount < 2)) {
+            if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             this.statusText.setText(this.jumpCount);
