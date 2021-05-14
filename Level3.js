@@ -145,7 +145,7 @@ export default class Level3 extends Phaser.Scene {
             ]
         });
 
-        this.movplatform8 = this.physics.add.sprite(1700,400, 'sp').setScale(1,0.6)
+        this.movplatform8 = this.physics.add.sprite(1850,400, 'sp').setScale(1,0.6)
         .setVelocity(100,-100);
         this.movplatform8.setImmovable(true);
         this.movplatform8.body.setAllowGravity(false);
@@ -153,7 +153,7 @@ export default class Level3 extends Phaser.Scene {
             targets: this.movplatform8.body.velocity,
             loop: -1,
             tweens: [
-                { x: -150, y: 0, duration: 3000, ease: 'Stepped'},
+                { x: -150, y: 0, duration: 4000, ease: 'Stepped'},
                 { x: 150, y: 0, duration: 4000, ease: 'Stepped'}
             ]
         });
