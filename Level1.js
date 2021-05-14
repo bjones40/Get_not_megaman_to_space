@@ -230,17 +230,17 @@ export default class Level1 extends Phaser.Scene {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
         else if(upPress && (!touchFloor && this.jumpCount < 2)) {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
         else if(touchFloor && !upPress && this.jumpCount != 0) {
             this.jumpCount = 0;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
 
         //Dash move has 2 second cooldown

@@ -132,7 +132,8 @@ export default class Level4 extends Phaser.Scene {
         this.physics.add.collider(this.player,this.movplatform2);
         this.physics.add.collider(this.player,this.movplatform3);
 
-        this.statusText = this.add.text(0, 0, 'Free Real-estate');
+        //Debug Text
+        //this.statusText = this.add.text(0, 0, 'Free Real-estate');
 
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
@@ -243,7 +244,7 @@ export default class Level4 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    this.scene.start("LevelEX",{sound: this.soundStatus});
+                    this.scene.start("primaryMenu",{sound: this.soundStatus});
                 }
               })
         }
@@ -290,17 +291,17 @@ export default class Level4 extends Phaser.Scene {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
         else if(upPress && (!touchFloor && this.jumpCount < 2)) {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
         else if(touchFloor && !upPress && this.jumpCount != 0) {
             this.jumpCount = 0;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
 
         //Dash move has 2 second cooldown

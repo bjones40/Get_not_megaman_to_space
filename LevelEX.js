@@ -215,7 +215,7 @@ update() {
                 this.winState = false;
                 this.player.x = 9999;
                 this.mainMusic.stop();
-                this.scene.start("primaryMenu");
+                this.scene.start("primaryMenu", {soundStatus: this.soundStatus});
             }
           })
     }
