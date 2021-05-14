@@ -109,6 +109,7 @@ create() {
     //bind attributes
     this.controls = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     this.anims.create({
             key: 'move_right',
             frames: this.anims.generateFrameNames('dude', {
@@ -223,6 +224,17 @@ update() {
     if (this.controls.left.isDown) {
         this.player.setVelocityX(-160);
         this.player.flipX = true;
+        //Dash move, 2 second cooldown, goes left
+        if(Phaser.Input.Keyboard.JustDown(this.zKey))
+        {
+            this.coolDownCheck = this.time.now - this.coolDown;
+            if (this.coolDownCheck > 2000) {
+                console.log("YES");
+                this.player.anims.play('dash',true);
+                this.player.setVelocityX(-4000);
+                this.coolDown = this.time.now;
+            }
+        }
         if (!touchFloor) {
             if(!this.changeAnimations)
             this.player.anims.play('jumping', true);
@@ -234,6 +246,16 @@ update() {
     else if (this.controls.right.isDown) {
         this.player.setVelocityX(160);
         this.player.flipX = false;
+        //Dash move, 2 second cooldown, goes right
+        if(Phaser.Input.Keyboard.JustDown(this.zKey))
+        {
+            this.coolDownCheck = this.time.now - this.coolDown;
+            if (this.coolDownCheck > 2000) {
+                this.player.anims.play('dash',true)
+                this.player.setVelocityX(4000);
+                this.coolDown = this.time.now;
+            }
+        }
         if (!touchFloor) {
             if (this.controls.right.isDown || this.controls.left.isDown) {
                 if(!this.changeAnimations)
@@ -268,28 +290,6 @@ update() {
     }
     if (touchFloor && !upPress) {
         this.jumpCount = 0;
-    }
-
-    //Dash move has 2 second cooldown
-    if (leftPress) {
-        this.pressDelay = this.time.now - this.lastTime;
-        this.lastTime = this.time.now;
-        this.coolDownCheck = this.time.now - this.coolDown;
-        if (this.pressDelay < 350 && leftPress && this.coolDownCheck > 2000) {
-            this.player.anims.play('dash',true)
-            this.player.setVelocityX(-4000);
-            this.coolDown = this.time.now;
-        }
-    }
-    if (rightPress) {
-        this.pressDelay = this.time.now - this.lastTime;
-        this.lastTime = this.time.now;
-        this.coolDownCheck = this.time.now - this.coolDown;
-        if (this.pressDelay < 350 && rightPress && this.coolDownCheck > 2000) {
-            this.player.anims.play('dash',true)
-            this.player.setVelocityX(4000);
-            this.coolDown = this.time.now;
-        }
     }
 }
 

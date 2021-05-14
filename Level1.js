@@ -79,6 +79,8 @@ export default class Level1 extends Phaser.Scene {
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        
 
         //Bind animations
         this.anims.create({
@@ -191,6 +193,16 @@ export default class Level1 extends Phaser.Scene {
         if (this.controls.left.isDown) {
             this.player.setVelocityX(-160);
             this.player.flipX = true;
+            //Dash move, 2 second cooldown, goes left
+            if(Phaser.Input.Keyboard.JustDown(this.zKey))
+            {
+                this.coolDownCheck = this.time.now - this.coolDown;
+                if (this.coolDownCheck > 2000) {
+                    this.player.anims.play('dash',true);
+                    this.player.setVelocityX(-4000);
+                    this.coolDown = this.time.now;
+                }
+            }
             if (!touchFloor) {
                 if(!this.changeAnimations)
                 this.player.anims.play('jumping', true);
@@ -202,6 +214,16 @@ export default class Level1 extends Phaser.Scene {
         else if (this.controls.right.isDown) {
             this.player.setVelocityX(160);
             this.player.flipX = false;
+            //Dash move, 2 second cooldown, goes right
+            if(Phaser.Input.Keyboard.JustDown(this.zKey))
+            {
+                this.coolDownCheck = this.time.now - this.coolDown;
+                if (this.coolDownCheck > 2000) {
+                    this.player.anims.play('dash',true)
+                    this.player.setVelocityX(4000);
+                    this.coolDown = this.time.now;
+                }
+            }
             if (!touchFloor) {
                 if (this.controls.right.isDown || this.controls.left.isDown) {
                     if(!this.changeAnimations)
@@ -247,12 +269,7 @@ export default class Level1 extends Phaser.Scene {
         if (leftPress) {
             this.pressDelay = this.time.now - this.lastTime;
             this.lastTime = this.time.now;
-            this.coolDownCheck = this.time.now - this.coolDown;
-            if (this.pressDelay < 350 && leftPress && this.coolDownCheck > 2000) {
-                this.player.anims.play('dash',true)
-                this.player.setVelocityX(-4000);
-                this.coolDown = this.time.now;
-            }
+            
         }
         if (rightPress) {
             this.pressDelay = this.time.now - this.lastTime;
