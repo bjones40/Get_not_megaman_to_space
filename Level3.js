@@ -64,6 +64,127 @@ export default class Level3 extends Phaser.Scene {
                 { x: 0, y:    0, duration: 1000, ease: 'Stepped'}
             ]
         });
+
+        this.movplatform2 = this.physics.add.sprite(1850,1000, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform2.setImmovable(true);
+        this.movplatform2.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform2.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: -100, y: 0, duration: 6000, ease: 'Stepped'},
+                { x: 0, y:    0, duration: 1000, ease: 'Stepped'},
+                { x: 100, y: 0, duration: 6000, ease: 'Stepped'},
+                { x: 0, y:    0, duration: 1000, ease: 'Stepped'},
+            ]
+        });
+
+        this.movplatform3 = this.physics.add.sprite(1250,900, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform3.setImmovable(true);
+        this.movplatform3.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform3.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: 150, y: 0, duration: 4000, ease: 'Stepped'},
+                { x: -150, y: 0, duration: 4000, ease: 'Stepped'}
+            ]
+        });
+
+        this.movplatform4 = this.physics.add.sprite(1850,800, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform4.setImmovable(true);
+        this.movplatform4.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform4.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: -150, y: 0, duration: 4000, ease: 'Stepped'},
+                { x: 150, y: 0, duration: 4000, ease: 'Stepped'}
+            ]
+        });
+
+        this.movplatform5 = this.physics.add.sprite(1250,700, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform5.setImmovable(true);
+        this.movplatform5.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform5.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: 150, y: 0, duration: 4000, ease: 'Stepped'},
+                { x: -150, y: 0, duration: 4000, ease: 'Stepped'}
+            ]
+        });
+
+        this.movplatform6 = this.physics.add.sprite(1850,600, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform6.setImmovable(true);
+        this.movplatform6.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform6.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: -150, y: 0, duration: 4000, ease: 'Stepped'},
+                { x: 150, y: 0, duration: 4000, ease: 'Stepped'}
+            ]
+        });
+
+        this.movplatform7 = this.physics.add.sprite(1250,500, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform7.setImmovable(true);
+        this.movplatform7.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform7.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: 150, y: 0, duration: 4000, ease: 'Stepped'},
+                { x: -150, y: 0, duration: 4000, ease: 'Stepped'}
+            ]
+        });
+
+        this.movplatform8 = this.physics.add.sprite(1700,400, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform8.setImmovable(true);
+        this.movplatform8.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform8.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: -150, y: 0, duration: 3000, ease: 'Stepped'},
+                { x: 150, y: 0, duration: 4000, ease: 'Stepped'}
+            ]
+        });
+
+        this.movplatform9 = this.physics.add.sprite(1250,300, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform9.setImmovable(true);
+        this.movplatform9.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform9.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: 200, y: 0, duration: 3000, ease: 'Stepped'},
+                { x: -200, y: 0, duration: 3000, ease: 'Stepped'}
+            ]
+        });
+
+        this.movplatform10 = this.physics.add.sprite(1850,200, 'sp').setScale(1,0.6)
+        .setVelocity(100,-100);
+        this.movplatform10.setImmovable(true);
+        this.movplatform10.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform10.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: -200, y: 0, duration: 3000, ease: 'Stepped'},
+                { x: 200, y: 0, duration: 3000, ease: 'Stepped'}
+            ]
+        });
+
+        
         
         //left  Less X
         //right More X
@@ -75,12 +196,131 @@ export default class Level3 extends Phaser.Scene {
         this.platforms.create(-20,750, 'rockbig').setScale(0.2,0.8).refreshBody();
         this.platforms.create(150,450, 'rocksmall').setScale(0.5,0.5).refreshBody();
         this.platforms.create(500,300, 'mp').setScale(0.9,0.5).refreshBody();
-        this.platforms.create(900,300, 'mp').setScale(0.5,0.5).refreshBody();
+        this.platforms.create(900,300, 'mp').setScale(0.9,0.5).refreshBody();
         this.platforms.create(-20,200, 'rockbig').setScale(0.3,0.4).refreshBody();
         this.platforms.create(150,140, 'sp').setScale(0.5,0.5).refreshBody();
+        this.platforms.create(1150,1000, 'mp').setScale(0.3,0.5).refreshBody();
+        this.platforms.create(1650,110, 'rocksmall').setScale(0.3,0.3).refreshBody();
+        
+        //this.platforms.create(1525,1000, 'sp').setScale(0.5,0.5).refreshBody();
 
 
+        //moving spikes
+        this.spike1 = this.physics.add.sprite(250, 950, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike1.setImmovable(true);
+        this.spike1.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike1.body.velocity,
+        loop: -1,
+        tweens: [
+            { x: 0, y: -150, duration: 2400, ease: 'Stepped'},
+            { x: 0, y: 150, duration: 2400, ease: 'Stepped'},
+        ]
+        });
 
+        this.spike2 = this.physics.add.sprite(600, 600, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike2.setImmovable(true);
+        this.spike2.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike2.body.velocity,
+        loop: -1,
+        tweens: [
+            { x:    0, y: -200, duration: 2000, ease: 'Stepped' },
+            { x:    0, y:    0, duration: 1000, ease: 'Stepped' },
+            { x:  150, y:  100, duration: 4000, ease: 'Stepped' },
+            { x:    0, y: -200, duration: 2000, ease: 'Stepped' },
+            { x:    0, y:    0, duration: 1000, ease: 'Stepped' },
+            { x: -150, y:  100, duration: 4000, ease: 'Stepped' }
+            /*
+            { x: 0, y: 150, duration: 2400, ease: 'Stepped'},
+            { x: 0, y: -150, duration: 2400, ease: 'Stepped'},*/
+        ]
+        });
+
+        //left  Less X
+        //right More X
+        //up    Less Y
+        //down  More Y 
+
+        this.spike3 = this.physics.add.sprite(300, 600, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike3.setImmovable(true);
+        this.spike3.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike3.body.velocity,
+        loop: -1,
+        tweens: [
+            { x: 250, y: 0, duration: 1500, ease: 'Stepped'},
+            { x: -250, y: 0, duration: 1500, ease: 'Stepped'},
+        ]
+        });
+
+        this.spike4 = this.physics.add.sprite(300, 200, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike4.setImmovable(true);
+        this.spike4.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike4.body.velocity,
+        loop: -1,
+        tweens: [
+            { x: 0, y: 150, duration: 1500, ease: 'Stepped'},
+            { x: 0, y: -150, duration: 1500, ease: 'Stepped'},
+        ]
+        });
+
+        this.spike5 = this.physics.add.sprite(800, 450, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike5.setImmovable(true);
+        this.spike5.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike5.body.velocity,
+        loop: -1,
+        tweens: [
+            { x: 0, y: -150, duration: 2400, ease: 'Stepped'},
+            { x: 0, y: 150, duration: 2400, ease: 'Stepped'},
+        ]
+        });
+
+        this.spike6 = this.physics.add.sprite(700, 100, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike6.setImmovable(true);
+        this.spike6.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike6.body.velocity,
+        loop: -1,
+        tweens: [
+            { x: 0, y: 150, duration: 2400, ease: 'Stepped'},
+            { x: 0, y: -150, duration: 2400, ease: 'Stepped'},
+        ]
+        });
+
+        this.spike7 = this.physics.add.sprite(1300, 200, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike7.setImmovable(true);
+        this.spike7.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike7.body.velocity,
+        loop: -1,
+        tweens: [
+            { x: 0, y: 200, duration: 4000, ease: 'Stepped'},
+            { x: 0, y: -200, duration: 4000, ease: 'Stepped'},
+        ]
+        });
+
+        this.spike8 = this.physics.add.sprite(1600, 1000, 'spike').setScale(0.3,0.3)
+        .setVelocity(100,-100).setDepth(0);
+        this.spike8.setImmovable(true);
+        this.spike8.body.setAllowGravity(false);
+        this.tweens.timeline({
+        targets: this.spike8.body.velocity,
+        loop: -1,
+        tweens: [
+            { x: 0, y: -200, duration: 4500, ease: 'Stepped'},
+            { x: 0, y: 200, duration: 4500, ease: 'Stepped'},
+        ]
+        });
         
 
         //this.crystal.create(400,500, 'crystal').setScale(0.1,0.1),refreshBody();
@@ -88,10 +328,44 @@ export default class Level3 extends Phaser.Scene {
         
 
         //spikes
-       // this.spike.create(250,660,'spike').setScale(0.3,0.3).refreshBody();
-        this.spike.create(250,700,'spike').setScale(0.3,0.3).refreshBody();
-        this.spike.create(250,840,'spike').setScale(0.3,0.3).refreshBody();
-        this.goal.create(1500, 400, 'goal').setScale(0.9, 0.9).refreshBody();
+        this.spike.create(1100,660,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,700,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,740,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,780,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,820,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,860,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,900,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,940,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1100,980,'spike').setScale(0.3,0.3).refreshBody();
+
+        this.spike.create(1170,660,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,700,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,740,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,780,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,820,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,860,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,900,'spike').setScale(0.3,0.3).refreshBody();
+        //this.spike.create(1170,940,'spike').setScale(0.3,0.3).refreshBody();
+
+        this.spike.create(1170,300,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,250,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,200,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,150,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,100,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,50,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,350,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,400,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,450,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,500,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,550,'spike').setScale(0.3,0.3).refreshBody();
+        this.spike.create(1170,600,'spike').setScale(0.3,0.3).refreshBody();
+
+
+        
+        
+        
+
+        this.goal.create(1800, 100, 'goal').setScale(0.9, 0.9).refreshBody();
 
         //Create and configure player
         this.player = this.physics.add.sprite(50, 730, 'dude');
@@ -105,6 +379,23 @@ export default class Level3 extends Phaser.Scene {
         this.physics.add.collider(this.goal, this.player, this.win, null, this);
         this.physics.add.overlap(this.player, this.spike, this.death, null, this);
         this.physics.add.collider(this.player,this.movplatform);
+        this.physics.add.collider(this.player,this.movplatform2);
+        this.physics.add.collider(this.player,this.movplatform3);
+        this.physics.add.collider(this.player,this.movplatform4);
+        this.physics.add.collider(this.player,this.movplatform5);
+        this.physics.add.collider(this.player,this.movplatform6);
+        this.physics.add.collider(this.player,this.movplatform7);
+        this.physics.add.collider(this.player,this.movplatform8);
+        this.physics.add.collider(this.player,this.movplatform9);
+        this.physics.add.collider(this.player,this.movplatform10);
+        this.physics.add.overlap(this.spike1, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike2, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike3, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike4, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike5, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike6, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike7, this.player, this.death, null, this);
+        this.physics.add.overlap(this.spike8, this.player, this.death, null, this);
 
 
         
