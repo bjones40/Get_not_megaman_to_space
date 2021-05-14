@@ -31,7 +31,7 @@ export default class Level1 extends Phaser.Scene {
         this.counter = 0;
         this.movementControls1 = "My ship may have crashed, but I can\nstill move...\n\n(Press the left arrow to move left, and\n right arrow to move right)";
         this.movementControls2 = "The planet's environment is hostile...\nmy jetpack should keep me safe from\nthis lava.\n\n(Press the up arrow to jump.\n Press the up arrow again in midair\n to double jump)";
-        this.movementControls3 = "This gap is too wide for my jetpack's \nfuel cells, I'll have to activate my\naerial boosters.\n\n(Double tap left or right arrow to dash\n(2 second cooldown))";
+        this.movementControls3 = "This gap is too wide for my jetpack's \nfuel cells, I'll have to activate my\naerial boosters.\n\n(Press 'z' while moving to dash in that\ndirection)\n<2 second cooldown>";
         this.movementControls4 = "That platform is emitting powerful \nenergy. If I get on top of it,\nI should be able to use my teleporter!\n\n(Standing here clears the level!)";
 
         //Bind world objects
