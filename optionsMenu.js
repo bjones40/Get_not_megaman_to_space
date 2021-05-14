@@ -16,7 +16,7 @@ export default class optionsMenu extends Phaser.Scene {
     this.load.image('off','assets/text/soundOff.png');
     this.load.image('sound','assets/text/sound.png');
     this.load.audio("mainMusic", 'assets/audio/sample_music.mp3');
-    this.load.image('secret', 'assets/retired/platformg.jpg');
+    this.load.image('secret', 'assets/exassets/meowsecret.gif');
   }
 
   create() {
