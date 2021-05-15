@@ -22,6 +22,7 @@ export default class LevelEX extends Phaser.Scene {
         this.load.audio('bgm', 'assets/exassets/exsong.mp3');
         this.load.audio('died', 'assets/audio/death.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
+        this.load.audio('dash','assets/audio/dash.mp3');
     }
 create() {
     //misc variables
@@ -95,6 +96,10 @@ create() {
         volume : .1
     });
     this.deathSound = this.sound.add('died', {
+        loop : false,
+        volume : .1
+    });
+    this.dashSound = this.sound.add('dash', {
         loop : false,
         volume : .1
     });
@@ -229,7 +234,10 @@ update() {
         {
             this.coolDownCheck = this.time.now - this.coolDown;
             if (this.coolDownCheck > 2000) {
-                console.log("YES");
+                if(this.soundStatus)
+                {
+                    this.dashSound.play();
+                }
                 this.player.anims.play('dash',true);
                 this.player.setVelocityX(-4000);
                 this.coolDown = this.time.now;
@@ -251,6 +259,10 @@ update() {
         {
             this.coolDownCheck = this.time.now - this.coolDown;
             if (this.coolDownCheck > 2000) {
+                if(this.soundStatus)
+                {
+                    this.dashSound.play();
+                }
                 this.player.anims.play('dash',true)
                 this.player.setVelocityX(4000);
                 this.coolDown = this.time.now;

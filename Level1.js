@@ -21,6 +21,8 @@ export default class Level1 extends Phaser.Scene {
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
         this.load.audio('died', 'assets/audio/death.mp3');
+        this.load.audio('teleport', 'assets/audio/teleport.mp3');
+        this.load.audio('dash','assets/audio/dash.mp3');
     }
 
     create() {
@@ -61,6 +63,14 @@ export default class Level1 extends Phaser.Scene {
             volume : .1
         });
         this.deathSound = this.sound.add('died', {
+            loop : false,
+            volume : .1
+        });
+        this.tpSound = this.sound.add('teleport', {
+            loop : false,
+            volume : .1
+        });
+        this.dashSound = this.sound.add('dash', {
             loop : false,
             volume : .1
         });
@@ -175,6 +185,10 @@ export default class Level1 extends Phaser.Scene {
         this.winState;
         if(this.winState)
         {
+            if(this.soundStatus)
+            {
+                this.tpSound.play();
+            }
             this.physics.pause();
             this.changeAnimations = true;
             this.player.anims.play('teleport',true);
@@ -198,6 +212,10 @@ export default class Level1 extends Phaser.Scene {
             {
                 this.coolDownCheck = this.time.now - this.coolDown;
                 if (this.coolDownCheck > 2000) {
+                    if(this.soundStatus)
+                    {
+                        this.dashSound.play();
+                    }
                     this.player.anims.play('dash',true);
                     this.player.setVelocityX(-4000);
                     this.coolDown = this.time.now;
@@ -219,6 +237,10 @@ export default class Level1 extends Phaser.Scene {
             {
                 this.coolDownCheck = this.time.now - this.coolDown;
                 if (this.coolDownCheck > 2000) {
+                    if(this.soundStatus)
+                    {
+                        this.dashSound.play();
+                    }
                     this.player.anims.play('dash',true)
                     this.player.setVelocityX(4000);
                     this.coolDown = this.time.now;
@@ -263,23 +285,6 @@ export default class Level1 extends Phaser.Scene {
         else if(touchFloor && !upPress && this.jumpCount != 0) {
             this.jumpCount = 0;
             //this.statusText.setText(this.jumpCount);
-        }
-
-        //Dash move has 2 second cooldown
-        if (leftPress) {
-            this.pressDelay = this.time.now - this.lastTime;
-            this.lastTime = this.time.now;
-            
-        }
-        if (rightPress) {
-            this.pressDelay = this.time.now - this.lastTime;
-            this.lastTime = this.time.now;
-            this.coolDownCheck = this.time.now - this.coolDown;
-            if (this.pressDelay < 350 && rightPress && this.coolDownCheck > 2000) {
-                this.player.anims.play('dash',true)
-                this.player.setVelocityX(4000);
-                this.coolDown = this.time.now;
-            }
         }
 
         //Draw and move tutorial text based on player location

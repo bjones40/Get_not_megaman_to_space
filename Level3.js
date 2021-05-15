@@ -26,6 +26,8 @@ export default class Level3 extends Phaser.Scene {
         this.load.image('sp', 'assets/sp.png');
         this.load.audio('died', 'assets/audio/death.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
+        this.load.audio('teleport', 'assets/audio/teleport.mp3');
+        this.load.audio('dash','assets/audio/dash.mp3');
     }
     create() {
         //Utility variables
@@ -416,6 +418,14 @@ export default class Level3 extends Phaser.Scene {
             loop : false,
             volume : .1
         });
+        this.tpSound = this.sound.add('teleport', {
+            loop : false,
+            volume : .1
+        });
+        this.dashSound = this.sound.add('dash', {
+            loop : false,
+            volume : .1
+        });
 
         //Bind animations
         this.anims.create({
@@ -514,6 +524,10 @@ export default class Level3 extends Phaser.Scene {
         this.winState;
         if(this.winState)
         {
+            if(this.soundStatus)
+            {
+                this.tpSound.play();
+            }
             this.physics.pause();
             this.changeAnimations = true;
             this.player.anims.play('teleport',true);
@@ -535,6 +549,10 @@ export default class Level3 extends Phaser.Scene {
             {
                 this.coolDownCheck = this.time.now - this.coolDown;
                 if (this.coolDownCheck > 2000) {
+                    if(this.soundStatus)
+                    {
+                        this.dashSound.play();
+                    }
                     this.player.anims.play('dash',true);
                     this.player.setVelocityX(-4000);
                     this.coolDown = this.time.now;
@@ -556,6 +574,10 @@ export default class Level3 extends Phaser.Scene {
             {
                 this.coolDownCheck = this.time.now - this.coolDown;
                 if (this.coolDownCheck > 2000) {
+                    if(this.soundStatus)
+                    {
+                        this.dashSound.play();
+                    }
                     this.player.anims.play('dash',true)
                     this.player.setVelocityX(4000);
                     this.coolDown = this.time.now;
