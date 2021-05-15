@@ -409,6 +409,9 @@ export default class Level3 extends Phaser.Scene {
         this.controls = this.input.keyboard.createCursorKeys();
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         //Bind sounds
         this.deathSound = this.sound.add('died', {
             loop : false,
@@ -495,6 +498,7 @@ export default class Level3 extends Phaser.Scene {
         const upPress = Phaser.Input.Keyboard.JustDown(this.controls.up);
         const rightPress = Phaser.Input.Keyboard.JustDown(this.controls.right);
         const leftPress = Phaser.Input.Keyboard.JustDown(this.controls.left);
+        const wPress = Phaser.Input.Keyboard.JustDown(this.wKey);
         const touchFloor = this.player.body.touching.down;
         this.changeAnimations = false;
         
@@ -541,7 +545,7 @@ export default class Level3 extends Phaser.Scene {
               })
         }
         //Basic Movement and animation binding
-        if (this.controls.left.isDown) {
+        if (this.controls.left.isDown || this.aKey.isDown) {
             this.player.setVelocityX(-160);
             this.player.flipX = true;
             //Dash move, 2 second cooldown, goes left
@@ -566,11 +570,11 @@ export default class Level3 extends Phaser.Scene {
                 this.player.anims.play('move_right', true);
             }
         }
-        else if (this.controls.right.isDown) {
+        else if (this.controls.right.isDown || this.dKey.isDown) {
             this.player.setVelocityX(160);
             this.player.flipX = false;
             //Dash move, 2 second cooldown, goes right
-            if(Phaser.Input.Keyboard.JustDown(this.zKey))
+            if(Phaser.Input.Keyboard.JustDown(this.zKey) || Phaser.Input.Keyboard.JustDown(this.spaceBar))
             {
                 this.coolDownCheck = this.time.now - this.coolDown;
                 if (this.coolDownCheck > 2000) {
@@ -584,7 +588,7 @@ export default class Level3 extends Phaser.Scene {
                 }
             }
             if (!touchFloor) {
-                if (this.controls.right.isDown || this.controls.left.isDown) {
+                if ((this.controls.right.isDown || this.controls.left.isDown) || (this.dKey.isDown || this.aKey.isDown)) {
                     if(!this.changeAnimations)
                     this.player.anims.play('jumping', true);
                 }
@@ -607,22 +611,22 @@ export default class Level3 extends Phaser.Scene {
         }
 
         //Double jump
-        if (upPress && touchFloor) {
+        if ((upPress && touchFloor) || (wPress && touchFloor)) {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             //this.statusText.setText(this.jumpCount);
         }
-        else if(upPress && (!touchFloor && this.jumpCount < 2)) {
+        else if((upPress && (!touchFloor && this.jumpCount < 2)) || (wPress && (!touchFloor && this.jumpCount < 2))) {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
             //this.statusText.setText(this.jumpCount);
         }
-        else if(touchFloor && !upPress && this.jumpCount != 0) {
+        else if((touchFloor && !upPress && this.jumpCount != 0) || (touchFloor && !wPress && this.jumpCount != 0)) {
             this.jumpCount = 0;
             //this.statusText.setText(this.jumpCount);
-        }  
+        }
     }
 
     //Win condition: land on end goal
