@@ -20,6 +20,9 @@ export default class Level1 extends Phaser.Scene {
         this.load.image('ship', 'assets/ship2.png');
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
+        this.load.audio('died', 'assets/audio/death.mp3');
+        this.load.audio('teleport', 'assets/audio/teleport.mp3');
+        this.load.audio('dash','assets/audio/dash.mp3');
     }
 
     create() {
@@ -28,9 +31,9 @@ export default class Level1 extends Phaser.Scene {
         this.jumpCount = 0;
         this.coolDown = 0;
         this.counter = 0;
-        this.movementControls1 = "My ship may have crashed, but I can\nstill move...\n\n(Press the left arrow to move left, and\n right arrow to move right)";
-        this.movementControls2 = "The planet's environment is hostile...\nmy jetpack should keep me safe from\nthis lava.\n\n(Press the up arrow to jump.\n Press the up arrow again in midair\n to double jump)";
-        this.movementControls3 = "This gap is too wide for my jetpack's \nfuel cells, I'll have to activate my\naerial boosters.\n\n(Double tap left or right arrow to dash\n(2 second cooldown))";
+        this.movementControls1 = "My ship may have crashed, but I can\nstill move...\n\n(Press the left arrow to move left, and\nright arrow to move right\nOr A/D)";
+        this.movementControls2 = "The planet's environment is hostile...\nmy jetpack should keep me safe from\nthis lava.\n\n(Press the up arrow (or W) to jump.\nPress the up arrow again in midair\nto double jump)";
+        this.movementControls3 = "This gap is too wide for my jetpack's \nfuel cells, I'll have to activate my\naerial boosters.\n\n(Press 'z' (or space) while moving to\ndash in that direction)\n<2 second cooldown>";
         this.movementControls4 = "That platform is emitting powerful \nenergy. If I get on top of it,\nI should be able to use my teleporter!\n\n(Standing here clears the level!)";
 
         //Bind world objects
@@ -59,6 +62,18 @@ export default class Level1 extends Phaser.Scene {
             loop : false,
             volume : .1
         });
+        this.deathSound = this.sound.add('died', {
+            loop : false,
+            volume : .1
+        });
+        this.tpSound = this.sound.add('teleport', {
+            loop : false,
+            volume : .1
+        });
+        this.dashSound = this.sound.add('dash', {
+            loop : false,
+            volume : .1
+        });
 
         //Create and configure player
         this.player = this.physics.add.sprite(75, 920, 'dude');
@@ -74,7 +89,11 @@ export default class Level1 extends Phaser.Scene {
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
         this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
+        this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        
         //Bind animations
         this.anims.create({
             key: 'move_right',
@@ -140,6 +159,7 @@ export default class Level1 extends Phaser.Scene {
         const upPress = Phaser.Input.Keyboard.JustDown(this.controls.up);
         const rightPress = Phaser.Input.Keyboard.JustDown(this.controls.right);
         const leftPress = Phaser.Input.Keyboard.JustDown(this.controls.left);
+        const wPress = Phaser.Input.Keyboard.JustDown(this.wKey);
         const touchFloor = this.player.body.touching.down;
         this.changeAnimations = false;
 
@@ -147,23 +167,31 @@ export default class Level1 extends Phaser.Scene {
         this.gameOver;
         if (this.gameOver) {
             this.changeAnimations = true;
+            if(this.soundStatus)
+            {
+                this.deathSound.play();
+            }
             this.player.anims.play('death',true);
             this.time.addEvent({
-                delay: 400,
-                callback: () => {
-                    this.player.x = 9999;
-                    this.registry.destroy();
-                    this.events.off();
-                    this.scene.restart();
-                    this.gameOver = false;  
+            delay: 400,
+            callback: () => {
+                this.player.x = 9999;
+                this.registry.destroy();
+                this.events.off();
+                this.scene.restart();
+                this.gameOver = false;  
                 }
-              })
+            })
         }
         
         //Evaluate winstate for animation
         this.winState;
         if(this.winState)
         {
+            if(this.soundStatus)
+            {
+                this.tpSound.play();
+            }
             this.physics.pause();
             this.changeAnimations = true;
             this.player.anims.play('teleport',true);
@@ -179,9 +207,23 @@ export default class Level1 extends Phaser.Scene {
         }
 
         //Basic Movement and animation binding
-        if (this.controls.left.isDown) {
+        if (this.controls.left.isDown || this.aKey.isDown) {
             this.player.setVelocityX(-160);
             this.player.flipX = true;
+            //Dash move, 2 second cooldown, goes left
+            if(Phaser.Input.Keyboard.JustDown(this.zKey))
+            {
+                this.coolDownCheck = this.time.now - this.coolDown;
+                if (this.coolDownCheck > 2000) {
+                    if(this.soundStatus)
+                    {
+                        this.dashSound.play();
+                    }
+                    this.player.anims.play('dash',true);
+                    this.player.setVelocityX(-4000);
+                    this.coolDown = this.time.now;
+                }
+            }
             if (!touchFloor) {
                 if(!this.changeAnimations)
                 this.player.anims.play('jumping', true);
@@ -190,11 +232,25 @@ export default class Level1 extends Phaser.Scene {
                 this.player.anims.play('move_right', true);
             }
         }
-        else if (this.controls.right.isDown) {
+        else if (this.controls.right.isDown || this.dKey.isDown) {
             this.player.setVelocityX(160);
             this.player.flipX = false;
+            //Dash move, 2 second cooldown, goes right
+            if(Phaser.Input.Keyboard.JustDown(this.zKey) || Phaser.Input.Keyboard.JustDown(this.spaceBar))
+            {
+                this.coolDownCheck = this.time.now - this.coolDown;
+                if (this.coolDownCheck > 2000) {
+                    if(this.soundStatus)
+                    {
+                        this.dashSound.play();
+                    }
+                    this.player.anims.play('dash',true)
+                    this.player.setVelocityX(4000);
+                    this.coolDown = this.time.now;
+                }
+            }
             if (!touchFloor) {
-                if (this.controls.right.isDown || this.controls.left.isDown) {
+                if ((this.controls.right.isDown || this.controls.left.isDown) || (this.dKey.isDown || this.aKey.isDown)) {
                     if(!this.changeAnimations)
                     this.player.anims.play('jumping', true);
                 }
@@ -217,43 +273,21 @@ export default class Level1 extends Phaser.Scene {
         }
 
         //Double jump
-        if (upPress && touchFloor) {
+        if ((upPress && touchFloor) || (wPress && touchFloor)) {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
-        else if(upPress && (!touchFloor && this.jumpCount < 2)) {
+        else if((upPress && (!touchFloor && this.jumpCount < 2)) || (wPress && (!touchFloor && this.jumpCount < 2))) {
             if(this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
-            this.statusText.setText(this.jumpCount);
+            //this.statusText.setText(this.jumpCount);
         }
-        else if(touchFloor && !upPress && this.jumpCount != 0) {
+        else if((touchFloor && !upPress && this.jumpCount != 0) || (touchFloor && !wPress && this.jumpCount != 0)) {
             this.jumpCount = 0;
-            this.statusText.setText(this.jumpCount);
-        }
-
-        //Dash move has 2 second cooldown
-        if (leftPress) {
-            this.pressDelay = this.time.now - this.lastTime;
-            this.lastTime = this.time.now;
-            this.coolDownCheck = this.time.now - this.coolDown;
-            if (this.pressDelay < 350 && leftPress && this.coolDownCheck > 2000) {
-                this.player.anims.play('dash',true)
-                this.player.setVelocityX(-4000);
-                this.coolDown = this.time.now;
-            }
-        }
-        if (rightPress) {
-            this.pressDelay = this.time.now - this.lastTime;
-            this.lastTime = this.time.now;
-            this.coolDownCheck = this.time.now - this.coolDown;
-            if (this.pressDelay < 350 && rightPress && this.coolDownCheck > 2000) {
-                this.player.anims.play('dash',true)
-                this.player.setVelocityX(4000);
-                this.coolDown = this.time.now;
-            }
+            //this.statusText.setText(this.jumpCount);
         }
 
         //Draw and move tutorial text based on player location

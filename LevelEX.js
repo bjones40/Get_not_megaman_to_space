@@ -20,6 +20,9 @@ export default class LevelEX extends Phaser.Scene {
         this.load.image('coin', 'assets/exassets/excoin.png');
         this.load.image('arrow','assets/exassets/exarrow.png');
         this.load.audio('bgm', 'assets/exassets/exsong.mp3');
+        this.load.audio('died', 'assets/audio/death.mp3');
+        this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
+        this.load.audio('dash','assets/audio/dash.mp3');
     }
 create() {
     //misc variables
@@ -85,9 +88,22 @@ create() {
 
     //music initilization
     if(this.soundStatus && this.deathCount == 0) {
-        this.mainMusic = this.sound.add("bgm", {volume: .1});
+        this.mainMusic = this.sound.add("bgm", {volume: .1,loop: true});
         this.mainMusic.play();
     }
+    this.jetpack = this.sound.add('jetpack', {
+        loop : false,
+        volume : .1
+    });
+    this.deathSound = this.sound.add('died', {
+        loop : false,
+        volume : .1
+    });
+    this.dashSound = this.sound.add('dash', {
+        loop : false,
+        volume : .1
+    });
+
 
     //colliders
     this.physics.add.collider(this.platforms, this.player);
@@ -98,6 +114,11 @@ create() {
     //bind attributes
     this.controls = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.zKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+    this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    
     this.anims.create({
             key: 'move_right',
             frames: this.anims.generateFrameNames('dude', {
@@ -165,6 +186,7 @@ update() {
     const upPress = Phaser.Input.Keyboard.JustDown(this.controls.up);
     const rightPress = Phaser.Input.Keyboard.JustDown(this.controls.right);
     const leftPress = Phaser.Input.Keyboard.JustDown(this.controls.left);
+    const wPress = Phaser.Input.Keyboard.JustDown(this.wKey);
     const touchFloor = this.player.body.touching.down;
     this.changeAnimations = false;
 
@@ -172,20 +194,23 @@ update() {
     this.gameOver;
     if (this.gameOver) {
         this.changeAnimations = true;
-        this.deathCount++;
+        if(this.soundStatus)
+        {
+            this.deathSound.play();
+        }
         this.player.anims.play('death',true);
         this.time.addEvent({
-            delay: 400,
-            callback: () => {
-                this.player.x = 9999;
-                this.registry.destroy();
-                this.events.off();
-                this.scene.stop();
-                this.scene.start("LevelEX", {soundStatus: this.soundStatus, dCount: this.deathCount})
-                this.gameOver = false;  
+        delay: 400,
+        callback: () => {
+            this.player.x = 9999;
+            this.deathCount++;
+            this.registry.destroy();
+            this.events.off();
+            this.scene.stop();
+            this.scene.start("LevelEX", {soundStatus: this.soundStatus, dCount: this.deathCount});
+            this.gameOver = false;  
             }
-          })
-
+        })
     }
     
     //Evaluate winstate for animation
@@ -201,14 +226,28 @@ update() {
                 this.winState = false;
                 this.player.x = 9999;
                 this.mainMusic.stop();
-                this.scene.start("primaryMenu");
+                this.scene.start("primaryMenu", {soundStatus: this.soundStatus});
             }
           })
     }
     //Basic Movement and animation binding
-    if (this.controls.left.isDown) {
+    if (this.controls.left.isDown || this.aKey.isDown) {
         this.player.setVelocityX(-160);
         this.player.flipX = true;
+        //Dash move, 2 second cooldown, goes left
+        if(Phaser.Input.Keyboard.JustDown(this.zKey))
+        {
+            this.coolDownCheck = this.time.now - this.coolDown;
+            if (this.coolDownCheck > 2000) {
+                if(this.soundStatus)
+                {
+                    this.dashSound.play();
+                }
+                this.player.anims.play('dash',true);
+                this.player.setVelocityX(-4000);
+                this.coolDown = this.time.now;
+            }
+        }
         if (!touchFloor) {
             if(!this.changeAnimations)
             this.player.anims.play('jumping', true);
@@ -217,11 +256,25 @@ update() {
             this.player.anims.play('move_right', true);
         }
     }
-    else if (this.controls.right.isDown) {
+    else if (this.controls.right.isDown || this.dKey.isDown) {
         this.player.setVelocityX(160);
         this.player.flipX = false;
+        //Dash move, 2 second cooldown, goes right
+        if(Phaser.Input.Keyboard.JustDown(this.zKey) || Phaser.Input.Keyboard.JustDown(this.spaceBar))
+        {
+            this.coolDownCheck = this.time.now - this.coolDown;
+            if (this.coolDownCheck > 2000) {
+                if(this.soundStatus)
+                {
+                    this.dashSound.play();
+                }
+                this.player.anims.play('dash',true)
+                this.player.setVelocityX(4000);
+                this.coolDown = this.time.now;
+            }
+        }
         if (!touchFloor) {
-            if (this.controls.right.isDown || this.controls.left.isDown) {
+            if ((this.controls.right.isDown || this.controls.left.isDown) || (this.dKey.isDown || this.aKey.isDown)) {
                 if(!this.changeAnimations)
                 this.player.anims.play('jumping', true);
             }
@@ -244,38 +297,21 @@ update() {
     }
 
     //Double jump
-    if (upPress && touchFloor) {
+    if ((upPress && touchFloor) || (wPress && touchFloor)) {
+        if(this.soundStatus) { this.jetpack.play(); }
         this.player.setVelocityY(-220);
         this.jumpCount++;
+        //this.statusText.setText(this.jumpCount);
     }
-    if (upPress && (!touchFloor && this.jumpCount == 1)) {
+    else if((upPress && (!touchFloor && this.jumpCount < 2)) || (wPress && (!touchFloor && this.jumpCount < 2))) {
+        if(this.soundStatus) { this.jetpack.play(); }
         this.player.setVelocityY(-220);
         this.jumpCount++;
+        //this.statusText.setText(this.jumpCount);
     }
-    if (touchFloor && !upPress) {
+    else if((touchFloor && !upPress && this.jumpCount != 0) || (touchFloor && !wPress && this.jumpCount != 0)) {
         this.jumpCount = 0;
-    }
-
-    //Dash move has 2 second cooldown
-    if (leftPress) {
-        this.pressDelay = this.time.now - this.lastTime;
-        this.lastTime = this.time.now;
-        this.coolDownCheck = this.time.now - this.coolDown;
-        if (this.pressDelay < 350 && leftPress && this.coolDownCheck > 2000) {
-            this.player.anims.play('dash',true)
-            this.player.setVelocityX(-4000);
-            this.coolDown = this.time.now;
-        }
-    }
-    if (rightPress) {
-        this.pressDelay = this.time.now - this.lastTime;
-        this.lastTime = this.time.now;
-        this.coolDownCheck = this.time.now - this.coolDown;
-        if (this.pressDelay < 350 && rightPress && this.coolDownCheck > 2000) {
-            this.player.anims.play('dash',true)
-            this.player.setVelocityX(4000);
-            this.coolDown = this.time.now;
-        }
+        //this.statusText.setText(this.jumpCount);
     }
 }
 
