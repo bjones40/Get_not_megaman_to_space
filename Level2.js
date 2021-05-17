@@ -383,12 +383,11 @@ export default class Level2 extends Phaser.Scene {
         }
 
         //spike
-        this.spike1.angle += 1;
-        this.spike2.angle += 1;
+        this.spike1.angle += .4;
+        this.spike2.angle += .3;
     }
     collect(player, collectible) {
         collectible.disableBody(true, true);
-
     }
 
     //Win condition: land on end goal

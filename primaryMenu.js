@@ -43,7 +43,7 @@ export default class primaryMenu extends Phaser.Scene {
     this.gameButton2.on('pointerdown', function (pointer) {
       this.mainMusic.stop();
       this.scene.stop();
-      this.scene.start('Level2', {soundStatus: this.soundStatus});
+      this.scene.start('optionsMenu', {soundStatus: this.soundStatus});
     }.bind(this));
   }
 }
