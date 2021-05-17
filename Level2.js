@@ -20,7 +20,7 @@ export default class Level2 extends Phaser.Scene {
         this.load.image('mrock', 'assets/blocks/rockmed.png');
         this.load.image('srock', 'assets/blocks/rocksmall.png');
         this.load.image('sp', 'assets/sp.png');
-        this.load.image('crystal', 'assets/crystal.png');
+        this.load.image('collectible', 'assets/crystal.png');
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
     }
@@ -38,6 +38,10 @@ export default class Level2 extends Phaser.Scene {
         this.deathLava = this.physics.add.staticGroup();
         this.spike = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
+        this.collectible = this.physics.add.staticGroup({
+            key: 'crystal',
+            setXY: { x: 250, y: 500 }
+        });
         console.log("Sound update: " + this.soundStatus);
         this.fakebox = this.add.image(380, 360, 'brock').setScale(0.3,0.3);
 
@@ -54,6 +58,9 @@ export default class Level2 extends Phaser.Scene {
 
         //Create world objects
         this.deathLava.create(400,1050, 'lava').setScale(1000, 6).refreshBody().setDepth(1);
+
+        //collectible
+        //this.collectible = this.add.sprite(400, 800, 'crystal').setScale(.1,.1);
 
         //moving platform
         this.movplatform = this.physics.add.sprite(1400, 1000, 'movplatform')
@@ -112,9 +119,10 @@ export default class Level2 extends Phaser.Scene {
         this.platforms.create(1000, 500, 'mrock').setScale(.4,.2).refreshBody();
         
         //spikes
-        /*this.spike.create(250,660,'spike').setScale(0.3,0.3).refreshBody();
-        this.spike.create(250,700,'spike').setScale(0.3,0.3).refreshBody();
-        this.spike.create(250,840,'spike').setScale(0.3,0.3).refreshBody();*/
+        //this.staticSpike1.create(1100,700,'spike').setScale(0.3,0.3).refreshBody();
+        //this.stspike.create(1400,1000,'spike').setScale(0.3,0.3).refreshBody();
+        //this.spike.create(250,700,'spike').setScale(0.3,0.3).refreshBody();
+        //this.spike.create(250,840,'spike').setScale(0.3,0.3).refreshBody();
         
         this.goal.create(700, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
@@ -131,6 +139,7 @@ export default class Level2 extends Phaser.Scene {
         this.physics.add.overlap(this.deathLava, this.player, this.death, null, this);
         this.physics.add.overlap(this.spike1, this.player, this.death, null, this);
         this.physics.add.overlap(this.spike2, this.player, this.death, null, this);
+        this.physics.add.overlap(this.collectible, this.player, this.collect, null, this);
         
 
         this.statusText = this.add.text(0, 0, 'Free Real-estate');
@@ -319,8 +328,15 @@ export default class Level2 extends Phaser.Scene {
             }
         }
 
-        
+        //spike
+        this.spike1.angle += 1;
+        this.spike2.angle += 1;
     }
+    collect(player, collectible) {
+        collectible.disableBody(true, true);
+
+    }
+
     //Win condition: land on end goal
     win(player, goal) {
         if(this.player.body.touching.down) {

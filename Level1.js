@@ -9,7 +9,6 @@ export default class Level1 extends Phaser.Scene {
 
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
-        this.load.image('char', 'assets/char.jpg');
         this.load.image('lgplatform', 'assets/lp.png');
         this.load.image('mdplatform', 'assets/mp.png');
         this.load.image('smplatform', 'assets/sp.png');
