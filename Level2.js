@@ -76,7 +76,8 @@ export default class Level2 extends Phaser.Scene {
         this.deathLava.create(400, 1050, 'lava').setScale(1000, 6).refreshBody().setDepth(1);
 
         //collectible 
-        this.collectible = this.add.sprite(170, 420, "collectible").setScale(2,2);
+        this.collectible = this.physics.add.sprite(170, 420, "collectible").setScale(2,2);
+        this.collectible.body.setAllowGravity(false);
 
         //moving platform
         this.movplatform = this.physics.add.sprite(1400, 1000, 'movplatform')
@@ -471,9 +472,9 @@ export default class Level2 extends Phaser.Scene {
     collect(player, collectible) {
         this.add.text(100, 100, "FUCKO");
         console.log("FUCKO");
-        collectible.stop();
-        collectible.disableBody(true, true);
-        collectible.destroy();
+        this.collectible.stop();
+        this.collectible.disableBody(true, true);
+        this.collectible.destroy();
     }
 
     platGrav(player, movplatform) {
