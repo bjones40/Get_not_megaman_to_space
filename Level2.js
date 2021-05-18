@@ -21,11 +21,13 @@ export default class Level2 extends Phaser.Scene {
         this.load.image('srock', 'assets/blocks/rocksmall.png');
         this.load.image('sp', 'assets/sp.png');
         this.load.image('collectible', 'assets/crystal.png');
+        this.load.image('asteroid', 'assets/asteroid.png')
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
         this.load.audio('died', 'assets/audio/death.mp3');
         this.load.audio('teleport', 'assets/audio/teleport.mp3');
         this.load.audio('dash', 'assets/audio/dash.mp3');
+
     }
     create() {
         //Utility variables
@@ -42,6 +44,7 @@ export default class Level2 extends Phaser.Scene {
         this.deathLava = this.physics.add.staticGroup();
         this.spike = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
+        this.asteroid = this.physics.add.group();
         this.collectible = this.physics.add.staticGroup({
             key: 'crystal',
             setXY: { x: 250, y: 500 }
@@ -66,7 +69,6 @@ export default class Level2 extends Phaser.Scene {
             loop: false,
             volume: .1
         });
-
 
         //Create world objects
         this.deathLava.create(400, 1050, 'lava').setScale(1000, 6).refreshBody().setDepth(1);
@@ -143,6 +145,19 @@ export default class Level2 extends Phaser.Scene {
             ]
         });
 
+        //asteroids
+        this.asteroid1 = this.physics.add.sprite(1940, 20, 'asteroid').setScale(0.5, 0.5);
+        this.asteroid2 = this.physics.add.sprite(1940, 200, 'asteroid').setScale(0.6, 0.6);
+        this.asteroid3 = this.physics.add.sprite(1940, 400, 'asteroid').setScale(0.4, 0.4);
+        this.asteroid4 = this.physics.add.sprite(2240, 100, 'asteroid').setScale(0.5, 0.5);
+        this.asteroid5 = this.physics.add.sprite(2440, 300, 'asteroid').setScale(0.6, 0.6);
+        this.asteroid6 = this.physics.add.sprite(2700, 250, 'asteroid').setScale(0.4, 0.4);
+        this.asteroid1.body.setAllowGravity(false);
+        this.asteroid2.body.setAllowGravity(false);
+        this.asteroid3.body.setAllowGravity(false);
+        this.asteroid4.body.setAllowGravity(false);
+        this.asteroid5.body.setAllowGravity(false);
+        this.asteroid6.body.setAllowGravity(false);
 
         //platforms left to right
         this.platforms.create(0, 940, 'brock').setScale(0.5, 0.5).refreshBody();
@@ -156,12 +171,6 @@ export default class Level2 extends Phaser.Scene {
         this.platforms.create(1850, 450, 'srock').setScale(.5, .5).refreshBody();
         this.platforms.create(1500, 300, 'srock').setScale(.5, .3).refreshBody();
         this.platforms.create(1000, 500, 'mrock').setScale(.4, .2).refreshBody();
-
-        //spikes
-        //this.staticSpike1.create(1100,700,'spike').setScale(0.3,0.3).refreshBody();
-        //this.stspike.create(1400,1000,'spike').setScale(0.3,0.3).refreshBody();
-        //this.spike.create(250,700,'spike').setScale(0.3,0.3).refreshBody();
-        //this.spike.create(250,840,'spike').setScale(0.3,0.3).refreshBody();
 
         this.goal.create(700, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
@@ -180,6 +189,12 @@ export default class Level2 extends Phaser.Scene {
         this.physics.add.overlap(this.spike2, this.player, this.death, null, this);
         this.physics.add.overlap(this.spike3, this.player, this.death, null, this);
         this.physics.add.overlap(this.spike4, this.player, this.death, null, this);
+        this.physics.add.overlap(this.asteroid1, this.player, this.death, null, this);
+        this.physics.add.overlap(this.asteroid2, this.player, this.death, null, this);
+        this.physics.add.overlap(this.asteroid3, this.player, this.death, null, this);
+        this.physics.add.overlap(this.asteroid4, this.player, this.death, null, this);
+        this.physics.add.overlap(this.asteroid5, this.player, this.death, null, this);
+        this.physics.add.overlap(this.asteroid6, this.player, this.death, null, this);
         this.physics.add.overlap(this.collectible, this.player, this.collect, null, this);
 
         //Debug text
@@ -216,7 +231,6 @@ export default class Level2 extends Phaser.Scene {
                 zeroPad: 3
             }),
             repeat: -1
-
         });
         this.anims.create({
             key: 'jumping',
@@ -227,7 +241,6 @@ export default class Level2 extends Phaser.Scene {
                 zeroPad: 3
             }),
             repeat: -1
-
         });
         this.anims.create({
             key: 'standing_jump',
@@ -238,7 +251,6 @@ export default class Level2 extends Phaser.Scene {
                 zeroPad: 3
             }),
             repeat: -1
-
         });
         this.anims.create({
             key: 'death',
@@ -393,6 +405,22 @@ export default class Level2 extends Phaser.Scene {
             this.tbox.destroy();
         }
 
+        //asteroids
+        this.moveAsteroids(this.asteroid1, 1.5);
+        this.moveAsteroids(this.asteroid2, 2.2);
+        this.moveAsteroids(this.asteroid3, 2.0);
+        this.moveAsteroids(this.asteroid4, 1.8);
+        this.moveAsteroids(this.asteroid5, 1.6);
+        this.moveAsteroids(this.asteroid6, 1.9);
+
+        //rotate asteroids
+        this.asteroid1.angle += 0.6;
+        this.asteroid2.angle -= 0.5;
+        this.asteroid3.angle += 0.4;
+        this.asteroid4.angle -= 0.7;
+        this.asteroid5.angle -= 0.9;
+        this.asteroid6.angle -= 1.1;
+
         //spike
         this.spike1.angle += .4;
         this.spike2.angle -= .4;
@@ -410,9 +438,17 @@ export default class Level2 extends Phaser.Scene {
         }
     }
 
-    /* displayPrompt1(textbox, prompt1) {
-        this.add.text(100, 100, "Hello");
-    } */
+    moveAsteroids(asteroid, speed) {
+        asteroid.x -= speed;
+        if(asteroid.x < 0) {
+            this.resetAsteroids(asteroid);
+        }
+    }
+    
+    resetAsteroids(asteroid) {
+        asteroid.x = 1950; 
+        asteroid.y = Phaser.Math.Between(-40, 300);
+    }
 
     //Win condition: land on end goal
     win(player, goal) {
