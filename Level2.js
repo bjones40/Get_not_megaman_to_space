@@ -406,10 +406,11 @@ export default class Level2 extends Phaser.Scene {
         }
 
         //textboxes
-        if (this.counter == 0) {
-            this.tbox = this.add.image(100, 100, this.textbox);
+        if (this.counter == 0) { 
+            this.tbox = this.add.image(280, 140, 'info').setScale(2, 0.7); 
             this.firstText = this.add.text(100, 100, this.prompt1);
             this.counter++;
+            if(this.soundStatus) { this.messageSound.play(); }
         } 
         else if (this.player.x > 600) {
             this.firstText.destroy();
@@ -417,12 +418,12 @@ export default class Level2 extends Phaser.Scene {
         }
 
         //asteroids
-        this.moveAsteroids(this.asteroid1, 1.5);
-        this.moveAsteroids(this.asteroid2, 2.2);
-        this.moveAsteroids(this.asteroid3, 2.0);
-        this.moveAsteroids(this.asteroid4, 1.8);
-        this.moveAsteroids(this.asteroid5, 1.6);
-        this.moveAsteroids(this.asteroid6, 1.9);
+        this.moveAsteroids(this.asteroid1);
+        this.moveAsteroids(this.asteroid2);
+        this.moveAsteroids(this.asteroid3);
+        this.moveAsteroids(this.asteroid4);
+        this.moveAsteroids(this.asteroid5);
+        this.moveAsteroids(this.asteroid6);
 
         //rotate asteroids
         this.asteroid1.angle += 0.6;
@@ -441,6 +442,7 @@ export default class Level2 extends Phaser.Scene {
 
     collect(player, collectible) {
         this.add.text(100, 100, "FUCKO");
+        console.log("FUCKO");
         collectible.stop();
         collectible.disableBody(true, true);
         collectible.destroy();
@@ -452,8 +454,8 @@ export default class Level2 extends Phaser.Scene {
         }
     }
 
-    moveAsteroids(asteroid, speed) {
-        asteroid.x -= speed;
+    moveAsteroids(asteroid) {
+        asteroid.x -= Phaser.Math.Between(1, 2); //random speed
         if(asteroid.x < 0) {
             this.resetAsteroids(asteroid);
         }
