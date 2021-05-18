@@ -20,7 +20,6 @@ export default class Level2 extends Phaser.Scene {
         this.load.image('mrock', 'assets/blocks/rockmed.png');
         this.load.image('srock', 'assets/blocks/rocksmall.png');
         this.load.image('sp', 'assets/sp.png');
-        this.load.image('collectible', 'assets/crystal.png');
         this.load.image('asteroid', 'assets/asteroid.png')
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
@@ -28,6 +27,10 @@ export default class Level2 extends Phaser.Scene {
         this.load.audio('teleport', 'assets/audio/teleport.mp3');
         this.load.audio('dash', 'assets/audio/dash.mp3');
 
+        this.load.spritesheet('collectible', 'assets/spr_coin_ama.png', {
+            frameWidth: 16, 
+            frameHeight: 16
+        });
     }
     create() {
         //Utility variables
@@ -42,13 +45,10 @@ export default class Level2 extends Phaser.Scene {
         this.background = this.add.image(0, 0, 'bg').setOrigin(0);
         this.platforms = this.physics.add.staticGroup();
         this.deathLava = this.physics.add.staticGroup();
-        this.spike = this.physics.add.staticGroup();
+        //this.spikes = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
         this.asteroid = this.physics.add.group();
-        this.collectible = this.physics.add.staticGroup({
-            key: 'crystal',
-            setXY: { x: 250, y: 500 }
-        });
+        //this.collectible = this.physics.add.staticGroup();
         console.log("Sound update: " + this.soundStatus);
         this.fakebox = this.add.image(380, 360, 'brock').setScale(0.3, 0.3);
 
@@ -73,8 +73,10 @@ export default class Level2 extends Phaser.Scene {
         //Create world objects
         this.deathLava.create(400, 1050, 'lava').setScale(1000, 6).refreshBody().setDepth(1);
 
-        //collectible
-        //this.collectible = this.add.sprite(400, 800, 'crystal').setScale(.1,.1);
+        //collectible 
+        //this.crystal = this.collectible.create(250, 500, 'collectible').setScale(0.4, 0.4);
+        this.collectible = this.add.sprite(270, 520, "collectible").setScale(2,2);
+
 
         //moving platform
         this.movplatform = this.physics.add.sprite(1400, 1000, 'movplatform')
@@ -146,12 +148,12 @@ export default class Level2 extends Phaser.Scene {
         });
 
         //asteroids
-        this.asteroid1 = this.physics.add.sprite(1940, 20, 'asteroid').setScale(0.5, 0.5);
-        this.asteroid2 = this.physics.add.sprite(1940, 200, 'asteroid').setScale(0.6, 0.6);
-        this.asteroid3 = this.physics.add.sprite(1940, 400, 'asteroid').setScale(0.4, 0.4);
-        this.asteroid4 = this.physics.add.sprite(2240, 100, 'asteroid').setScale(0.5, 0.5);
-        this.asteroid5 = this.physics.add.sprite(2440, 300, 'asteroid').setScale(0.6, 0.6);
-        this.asteroid6 = this.physics.add.sprite(2700, 250, 'asteroid').setScale(0.4, 0.4);
+        this.asteroid1 = this.asteroid.create(1940, 20, 'asteroid').setScale(0.5, 0.5);
+        this.asteroid2 = this.asteroid.create(1940, 200, 'asteroid').setScale(0.6, 0.6);
+        this.asteroid3 = this.asteroid.create(1940, 400, 'asteroid').setScale(0.4, 0.4);
+        this.asteroid4 = this.asteroid.create(2240, 100, 'asteroid').setScale(0.5, 0.5);
+        this.asteroid5 = this.asteroid.create(2440, 300, 'asteroid').setScale(0.6, 0.6);
+        this.asteroid6 = this.asteroid.create(2700, 250, 'asteroid').setScale(0.4, 0.4);
         this.asteroid1.body.setAllowGravity(false);
         this.asteroid2.body.setAllowGravity(false);
         this.asteroid3.body.setAllowGravity(false);
@@ -185,16 +187,19 @@ export default class Level2 extends Phaser.Scene {
         this.physics.add.collider(this.movplatform, this.player, this.platGrav, null, this);
         this.physics.add.collider(this.goal, this.player, this.win, null, this);
         this.physics.add.overlap(this.deathLava, this.player, this.death, null, this);
+            //spikes
         this.physics.add.overlap(this.spike1, this.player, this.death, null, this);
         this.physics.add.overlap(this.spike2, this.player, this.death, null, this);
         this.physics.add.overlap(this.spike3, this.player, this.death, null, this);
         this.physics.add.overlap(this.spike4, this.player, this.death, null, this);
+            //asteroids
         this.physics.add.overlap(this.asteroid1, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid2, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid3, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid4, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid5, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid6, this.player, this.death, null, this);
+            //collectible
         this.physics.add.overlap(this.collectible, this.player, this.collect, null, this);
 
         //Debug text
@@ -221,7 +226,6 @@ export default class Level2 extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
-
         this.anims.create({
             key: 'standing',
             frames: this.anims.generateFrameNames('dude', {
@@ -264,6 +268,13 @@ export default class Level2 extends Phaser.Scene {
             key: 'dash',
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1, end: 2, zeroPad: 3 }), frameRate: 5
         });
+        this.anims.create({
+            key: "collectibleAnim",
+            frames: this.anims.generateFrameNumbers("collectible"),
+            frameRate: 10,
+            repeat: -1
+        }); 
+        this.collectible.play("collectibleAnim");
     }
 
     update() {
@@ -429,7 +440,10 @@ export default class Level2 extends Phaser.Scene {
     }
 
     collect(player, collectible) {
+        this.add.text(100, 100, "FUCKO");
+        collectible.stop();
         collectible.disableBody(true, true);
+        collectible.destroy();
     }
 
     platGrav(player, movplatform) {
@@ -462,8 +476,5 @@ export default class Level2 extends Phaser.Scene {
         this.physics.pause();
         this.gameOver = true;
     }
-
-
-
 }
 
