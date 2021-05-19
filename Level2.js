@@ -475,6 +475,8 @@ export default class Level2 extends Phaser.Scene {
     }
 
     collect(player, collectible) {
+        this.add.text(100, 100, "FUCKO");
+        console.log("FUCKO");
         this.collectible.stop();
         this.collectible.disableBody(true, true);
         this.collectible.destroy();
