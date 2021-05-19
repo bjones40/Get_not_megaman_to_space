@@ -296,7 +296,7 @@ export default class Level2 extends Phaser.Scene {
         }); 
         this.collectible.play("collectibleAnim");
         this.skipButton.on('pointerdown', function (pointer) {
-            this.scene.start('Level3',{soundStatus: this.soundTemp});
+            this.scene.start('Level3', {soundStatus: this.soundStatus});
           }.bind(this));
     }
 

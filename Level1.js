@@ -156,7 +156,7 @@ export default class Level1 extends Phaser.Scene {
         });
 
         this.skipButton.on('pointerdown', function (pointer) {
-            this.scene.start('Level2',{soundStatus: this.soundTemp});
+            this.scene.start('Level2',{soundStatus: this.soundStatus});
           }.bind(this));
     }
 

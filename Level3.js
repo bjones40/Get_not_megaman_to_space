@@ -214,7 +214,7 @@ export default class Level3 extends Phaser.Scene {
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1,end: 2, zeroPad: 3}),frameRate: 5
         });
         this.skipButton.on('pointerdown', function (pointer) {
-            this.scene.start('Level4',{soundStatus: this.soundTemp});
+            this.scene.start('Level4',{soundStatus: this.soundStatus});
           }.bind(this));
     }
 
