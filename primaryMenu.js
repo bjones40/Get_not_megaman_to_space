@@ -14,6 +14,10 @@ export default class primaryMenu extends Phaser.Scene {
     this.load.image('title', 'assets/text/spaceman.png');
     this.load.image('titlebg', 'assets/titlebg.jpg');
     this.load.audio("mainMusic", 'assets/audio/sample_music.mp3');
+    this.load.spritesheet('crystal', 'assets/spr_coin_ama.png', {
+      frameWidth: 16, 
+      frameHeight: 16
+  });
   }
 
   create() {
@@ -27,6 +31,44 @@ export default class primaryMenu extends Phaser.Scene {
     this.gameButton = this.add.sprite(960, 450, 'sbutton').setInteractive();
     this.gameButton2 = this.add.sprite(960, 650, 'obutton').setInteractive();
     this.title = this.add.image(960, 200, 'title').setScale(2,2);
+    
+    this.hoveringSprite = this.add.sprite(100, 100, "crystal").setScale(3,3).setVisible(false);
+
+    //play button hover 
+    this.gameButton.setInteractive();
+    this.gameButton.on("pointerover", () => {
+      this.hoveringSprite.play("rotate");
+      this.hoveringSprite.x = this.gameButton.x - 200;
+      this.hoveringSprite.y = this.gameButton.y;
+      this.hoveringSprite.setVisible(true);
+    }) 
+    this.gameButton.on("pointerout", () => {
+      this.hoveringSprite.setVisible(false);
+    })
+
+    //options button hover
+    this.gameButton2.setInteractive();
+    this.gameButton2.on("pointerover", () => {
+      this.hoveringSprite.play("rotate");
+      this.hoveringSprite.x = this.gameButton2.x - 200;
+      this.hoveringSprite.y = this.gameButton2.y;
+      this.hoveringSprite.setVisible(true);
+    }) 
+    this.gameButton2.on("pointerout", () => {
+      this.hoveringSprite.setVisible(false);
+    })
+
+    //anims
+    this.anims.create({
+      key: "rotate",
+      frameRate: 4,
+      repeat: -1,
+      frames: this.anims.generateFrameNumbers("crystal", {
+        frames: [0,1,2,3]
+      })
+    })
+
+  
 
     //audio
     if(this.soundStatus) {

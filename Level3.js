@@ -7,6 +7,7 @@ export default class Level3 extends Phaser.Scene {
     init(options){
         this.soundStatus = options.soundStatus;
     }
+
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
         this.load.image('skip', 'assets/retired/skip.png');
@@ -266,7 +267,7 @@ export default class Level3 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    this.scene.start("Level4",{sound: this.soundStatus});
+                    this.scene.start('Level4',{soundStatus: this.soundStatus});
                 }
               })
         }
