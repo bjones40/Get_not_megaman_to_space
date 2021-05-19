@@ -9,6 +9,7 @@ export default class Level1 extends Phaser.Scene {
 
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
+        this.load.image('skip', 'assets/retired/skip.png');
         this.load.image('lgplatform', 'assets/lp.png');
         this.load.image('mdplatform', 'assets/mp.png');
         this.load.image('smplatform', 'assets/sp.png');
@@ -45,6 +46,7 @@ export default class Level1 extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.deathLava = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
+        this.skipButton = this.add.image(60,30,'skip').setInteractive();
         
         //Create world objects
         this.deathLava.create(400,1050, 'lava').setScale(1000, 6).refreshBody();
@@ -152,6 +154,10 @@ export default class Level1 extends Phaser.Scene {
             key: 'dash',
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1,end: 2, zeroPad: 3}),frameRate: 5
         });
+
+        this.skipButton.on('pointerdown', function (pointer) {
+            this.scene.start('Level2',{soundStatus: this.soundTemp});
+          }.bind(this));
     }
 
     update() {

@@ -10,6 +10,7 @@ export default class Level2 extends Phaser.Scene {
 
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
+        this.load.image('skip', 'assets/retired/skip.png');
         this.load.image('bg', 'assets/bg.jpg');
         this.load.image('lava', 'assets/blocks/lava.jpg');
         this.load.image('goal', 'assets/teleport.png');
@@ -49,6 +50,7 @@ export default class Level2 extends Phaser.Scene {
         this.asteroid = this.physics.add.group();
         console.log("Sound update: " + this.soundStatus);
         this.fakebox = this.add.image(280, 260, 'brock').setScale(0.3, 0.3);
+        this.skipButton = this.add.image(60,30,'skip').setInteractive();
 
         //sfx
         this.messageSound = this.sound.add('message', {
@@ -293,6 +295,9 @@ export default class Level2 extends Phaser.Scene {
             repeat: -1
         }); 
         this.collectible.play("collectibleAnim");
+        this.skipButton.on('pointerdown', function (pointer) {
+            this.scene.start('Level3',{soundStatus: this.soundTemp});
+          }.bind(this));
     }
 
     update() {
