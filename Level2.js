@@ -193,11 +193,11 @@ export default class Level2 extends Phaser.Scene {
         this.goal.create(500, 400, 'goal').setScale(0.9, 0.9).refreshBody();
 
         //Create and configure player
-        this.player = this.physics.add.sprite(50, 750, 'dude');
-        this.player.setScale(1.5);
-        this.player.setBounce(0);
-        this.player.setCollideWorldBounds(true);
-
+        this.player = this.physics.add.sprite(50, 750, 'dude')
+            .setScale(1.5)
+            .setBounce(0)
+            .setCollideWorldBounds(true);
+    
         //Add colliders between objects
         this.physics.add.collider(this.platforms, this.player);
         this.physics.add.collider(this.movplatform, this.player, this.platGrav, null, this);
@@ -469,9 +469,8 @@ export default class Level2 extends Phaser.Scene {
     }
 
     collect(player, collectible) {
-        this.add.text(100, 100, "FUCKO");
+
         console.log("FUCKO");
-        collectible.stop();
         collectible.disableBody(true, true);
         collectible.destroy();
     }
@@ -483,7 +482,7 @@ export default class Level2 extends Phaser.Scene {
     }
 
     moveAsteroids(asteroid) {
-        asteroid.x -= Phaser.Math.Between(1, 2); //random speed
+        asteroid.x -= Phaser.Math.Between(2, 3); //random speed
         if(asteroid.x < 0) {
             this.resetAsteroids(asteroid);
         }
