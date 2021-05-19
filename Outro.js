@@ -1,6 +1,6 @@
-export default class Level5 extends Phaser.Scene {
+export default class Outro extends Phaser.Scene {
     constructor() {
-        super('Level5');
+        super('Outro');
     }
 
     init(options) {
@@ -34,16 +34,13 @@ export default class Level5 extends Phaser.Scene {
         this.jumpCount = 0;
         this.coolDown = 0;
         this.counter = 0;
-        this.prompt1 = "Looks like the teleporter damaged \nmy jetpack...\n\nGotta make my way across \nwithout a double jump!";
+        this.prompt1 = "Is- is that a ship???\n Is someone else on this planet\nbesides me...?";
 
 
         //Bind world objects
         this.background = this.add.image(0, 0, 'bg').setOrigin(0);
         this.platforms = this.physics.add.staticGroup();
-        this.floatplatforms = this.physics.add.group();
-        this.risingLava = this.physics.add.group();
         this.goal = this.physics.add.staticGroup();
-        this.asteroid = this.physics.add.group();
         this.skipButton = this.add.image(60,30,'skip').setInteractive();
         console.log("Sound update: " + this.soundStatus);
 
@@ -70,125 +67,8 @@ export default class Level5 extends Phaser.Scene {
         });
 
         //Create world objects
-        this.risingLava = this.physics.add.sprite(400, 1010, 'rlava').setScale(1000, 6).refreshBody().setDepth(1)
-            .setVelocity(100, -100);
-        this.risingLava.setImmovable(true);
-        this.risingLava.body.setAllowGravity(false);
-        this.tweens.timeline({
-            targets: this.risingLava.body.velocity,
-            loop: -1,
-            tweens: [
-                { x: 10, y: 45, duration: 3000, ease: 'Stepped' },
-                { x: -10, y: 15, duration: 2000, ease: 'Stepped' },
-                { x: 10, y: -45, duration: 3000, ease: 'Stepped' },
-                { x: -10, y: -15, duration: 2000, ease: 'Stepped' }
-            ]
-        });
-
-        //moving platform
-        this.movplatform0 = this.physics.add.sprite(1750, 360, 'movplatform').setScale(.7, .5)
-            .setVelocity(100, -100);
-        this.movplatform0.setImmovable(true);
-        this.movplatform0.body.setAllowGravity(false);
-        this.tweens.timeline({
-            targets: this.movplatform0.body.velocity,
-            loop: -1,
-            tweens: [
-                { x: 0, y: +150, duration: 3000, ease: 'Stepped' },
-                { x: 0, y: 0, duration: 1000, ease: 'Stepped' },
-                { x: 0, y: -150, duration: 3000, ease: 'Stepped' },
-                { x: 0, y: 0, duration: 1900, ease: 'Stepped' }
-            ]
-        });
-
-        this.movplatform1 = this.physics.add.sprite(1420, 385, 'srock')
-            .setScale(0.5, 0.3)
-            .setVelocity(100, -100);
-        this.movplatform1.setImmovable(true);
-        this.movplatform1.body.setAllowGravity(false);
-        this.tweens.timeline({
-            targets: this.movplatform1.body.velocity,
-            loop: -1,
-            tweens: [
-                { x: +10, y: -10, duration: 2500, ease: 'Stepped' },
-                { x: 0, y: +10, duration: 2500, ease: 'Stepped' },
-                { x: -10, y: -10, duration: 2500, ease: 'Stepped' },
-                { x: 0, y: +10, duration: 2500, ease: 'Stepped' },
-            ]
-        });
-
-        this.movplatform2 = this.physics.add.sprite(1100, 360, 'movplatform').setScale(.4, .6)
-            .setVelocity(100, -100);
-        this.movplatform2.setImmovable(true);
-        this.movplatform2.body.setAllowGravity(false);
-        this.tweens.timeline({
-            targets: this.movplatform2.body.velocity,
-            loop: -1,
-            tweens: [
-                { x: -50, y: 0, duration: 3000, ease: 'Stepped' },
-                { x: 0, y: 0, duration: 100, ease: 'Stepped' },
-                { x: +50, y: 0, duration: 3000, ease: 'Stepped' },
-                { x: 0, y: 0, duration: 100, ease: 'Stepped' }
-            ]
-        });
-
-        this.movplatform3 = this.physics.add.sprite(690, 220, 'movplatform').setScale(.6, .3)
-            .setVelocity(100, -100);
-        this.movplatform3.setImmovable(true);
-        this.movplatform3.body.setAllowGravity(false);
-        this.tweens.timeline({
-            targets: this.movplatform3.body.velocity,
-            loop: -1,
-            tweens: [
-                { x: 0, y: +50, duration: 3000, ease: 'Stepped' },
-                { x: 0, y: 0, duration: 100, ease: 'Stepped' },
-                { x: 0, y: -50, duration: 3000, ease: 'Stepped' },
-                { x: 0, y: 0, duration: 100, ease: 'Stepped' }
-            ]
-        });
-        
-        //asteroids
-        this.asteroid1 = this.asteroid.create(0, 20, 'asteroid').setScale(0.5, 0.5);
-        this.asteroid2 = this.asteroid.create(0, 500, 'asteroid').setScale(0.6, 0.6);
-        this.asteroid3 = this.asteroid.create(0, 100, 'asteroid').setScale(0.4, 0.4);
-        this.asteroid4 = this.asteroid.create(-200, 400, 'asteroid').setScale(0.5, 0.5);
-        this.asteroid5 = this.asteroid.create(-400, 300, 'asteroid').setScale(0.6, 0.6);
-        this.asteroid6 = this.asteroid.create(-600, 340, 'asteroid').setScale(0.4, 0.4);
-        this.asteroid7 = this.asteroid.create(-900, 530, 'asteroid').setScale(0.5, 0.4);
-        this.asteroid8 = this.asteroid.create(-1100, 340, 'asteroid').setScale(0.5, 0.4);
-        this.asteroid1.body.setAllowGravity(false);
-        this.asteroid2.body.setAllowGravity(false);
-        this.asteroid3.body.setAllowGravity(false);
-        this.asteroid4.body.setAllowGravity(false);
-        this.asteroid5.body.setAllowGravity(false);
-        this.asteroid6.body.setAllowGravity(false);
-        this.asteroid7.body.setAllowGravity(false);
-        this.asteroid8.body.setAllowGravity(false);
-
         //platforms left to right
-        this.platforms.create(0, 885, 'brock').setScale(0.4, 0.5).refreshBody();
-        this.float1 = this.floatplatforms.create(300, 860, 'srock').setScale(.3, .3).refreshBody();
-        this.float1.body.setAllowGravity(false).setImmovable(false);
-        //
-        this.float2 = this.floatplatforms.create(550, 880, 'srock').setScale(.3, .3).refreshBody();
-        this.float2.body.setAllowGravity(false).setImmovable(false);
-        this.float2.flipX = true;
-        //
-        this.float3 = this.floatplatforms.create(800, 850, 'srock').setScale(.3, .3).refreshBody();
-        this.float3.body.setAllowGravity(false).setImmovable(false);
-        //
-        this.float4 = this.floatplatforms.create(1300, 850, 'srock').setScale(.4, .3).refreshBody();
-        this.float4.body.setAllowGravity(false).setImmovable(false);
-        //
-        this.float5 = this.floatplatforms.create(1500, 790, 'srock').setScale(.25, .4).refreshBody();
-        this.float5.body.setAllowGravity(false).setImmovable(false);
-        //
-        this.float6 = this.floatplatforms.create(430, 280, 'srock').setScale(.25, .4).refreshBody();
-        this.float6.body.setAllowGravity(false).setImmovable(false);
-        
-        this.platforms.create(1000, 895, 'brock').setScale(0.3, 0.5).refreshBody();
-        this.platforms.create(1890, 320, 'srock').setScale(.5, .5).refreshBody();
-        this.goal.create(220, 300, 'goal').setScale(0.9, 0.9).refreshBody();
+        this.platforms.create(0, 900, "sm").setScale(2,2).refreshBody();
 
         //Create and configure player
         this.player = this.physics.add.sprite(50, 750, 'dude')
@@ -198,23 +78,7 @@ export default class Level5 extends Phaser.Scene {
 
         //Add colliders between objects
         this.physics.add.collider(this.platforms, this.player);
-        this.physics.add.collider(this.movplatform0, this.player, this.platGrav, null, this);
-        this.physics.add.collider(this.movplatform1, this.player, this.platGrav, null, this);
-        this.physics.add.collider(this.movplatform2, this.player, this.platGrav, null, this);
-        this.physics.add.collider(this.movplatform3, this.player, this.platGrav, null, this);
-        this.physics.add.collider(this.floatplatforms, this.player);
         this.physics.add.collider(this.goal, this.player, this.win, null, this);
-        this.physics.add.overlap(this.risingLava, this.player, this.death, null, this);
-
-        //asteroids
-        this.physics.add.overlap(this.asteroid1, this.player, this.death, null, this);
-        this.physics.add.overlap(this.asteroid2, this.player, this.death, null, this);
-        this.physics.add.overlap(this.asteroid3, this.player, this.death, null, this);
-        this.physics.add.overlap(this.asteroid4, this.player, this.death, null, this);
-        this.physics.add.overlap(this.asteroid5, this.player, this.death, null, this);
-        this.physics.add.overlap(this.asteroid6, this.player, this.death, null, this);
-        this.physics.add.overlap(this.asteroid7, this.player, this.death, null, this);
-        this.physics.add.overlap(this.asteroid8, this.player, this.death, null, this);
 
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
@@ -279,7 +143,7 @@ export default class Level5 extends Phaser.Scene {
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1, end: 2, zeroPad: 3 }), frameRate: 5
         });
         this.skipButton.on('pointerdown', function (pointer) {
-            this.scene.start('Outro', {soundStatus: this.soundStatus});
+            this.scene.start('primaryMenu', {soundStatus: this.soundStatus});
         }.bind(this));
     }
 
@@ -326,8 +190,8 @@ export default class Level5 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    //this.game.sound.stopAll();
-                    this.scene.start('Outro', { soundStatus: this.soundStatus });
+                    this.game.sound.stopAll();
+                    this.scene.start('primaryMenu', { soundStatus: this.soundStatus });
                 }
             })
         }
@@ -414,44 +278,6 @@ export default class Level5 extends Phaser.Scene {
             this.tbox.destroy();
             this.counter++;
         }
-
-        //asteroids
-        this.moveAsteroids(this.asteroid1);
-        this.moveAsteroids(this.asteroid2);
-        this.moveAsteroids(this.asteroid3);
-        this.moveAsteroids(this.asteroid4);
-        this.moveAsteroids(this.asteroid5);
-        this.moveAsteroids(this.asteroid6);
-        this.moveAsteroids(this.asteroid7);
-        this.moveAsteroids(this.asteroid8);
-
-        //rotate asteroids
-        this.asteroid1.angle += 0.6;
-        this.asteroid2.angle -= 0.5;
-        this.asteroid3.angle += 0.4;
-        this.asteroid4.angle -= 0.7;
-        this.asteroid5.angle -= 0.9;
-        this.asteroid6.angle -= 1.1;
-        this.asteroid7.angle -= 0.9;
-        this.asteroid8.angle -= 0.1;
-    }
-
-    platGrav(player, movplatform) {
-        if (this.player.body.touching.down) {
-            this.player.body.setVelocityY(100);
-        }
-    }
-
-    moveAsteroids(asteroid) {
-        asteroid.x += Phaser.Math.Between(1, 3); //random speed
-        if (asteroid.x > 1930) {
-            this.resetAsteroids(asteroid);
-        }
-    }
-
-    resetAsteroids(asteroid) {
-        asteroid.x = -50;
-        asteroid.y = Phaser.Math.Between(0, 610);
     }
 
     //Win condition: land on end goal
