@@ -11,7 +11,7 @@ export default class Level5 extends Phaser.Scene {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
         this.load.image('skip', 'assets/retired/skip.png');
         this.load.image('bg', 'assets/bg.jpg');
-        this.load.image('lava', 'assets/blocks/risingLava.jpg');
+        this.load.image('rlava', 'assets/blocks/risingLava.png');
         this.load.image('goal', 'assets/teleport.png');
         this.load.image('info', 'assets/text/textbox.jpg');
         this.load.image('spike', 'assets/spike.png');
@@ -26,27 +26,25 @@ export default class Level5 extends Phaser.Scene {
         this.load.audio('died', 'assets/audio/death.mp3');
         this.load.audio('teleport', 'assets/audio/teleport.mp3');
         this.load.audio('dash', 'assets/audio/dash.mp3');
-
-        this.load.spritesheet('collectible', 'assets/spr_coin_ama.png', {
-            frameWidth: 16,
-            frameHeight: 16
-        });
     }
+
     create() {
         //Utility variables
         this.statusText = "";
         this.jumpCount = 0;
         this.coolDown = 0;
         this.counter = 0;
-        this.prompt1 = "Is that a ship?...";
-        
+        this.prompt1 = "Looks like the teleporter damaged \nmy jetpack...\n\nGotta make my way across \nwithout a double jump!";
+
 
         //Bind world objects
         this.background = this.add.image(0, 0, 'bg').setOrigin(0);
         this.platforms = this.physics.add.staticGroup();
-        this.deathLava = this.physics.add.group();
+        this.floatplatforms = this.physics.add.group();
+        this.risingLava = this.physics.add.group();
         this.goal = this.physics.add.staticGroup();
         this.asteroid = this.physics.add.group();
+        this.skipButton = this.add.image(60,30,'skip').setInteractive();
         console.log("Sound update: " + this.soundStatus);
 
         //sfx
@@ -72,25 +70,34 @@ export default class Level5 extends Phaser.Scene {
         });
 
         //Create world objects
-        this.deathLava.create(400, 1050, 'lava').setScale(1000, 6).refreshBody().setDepth(1);
-
-        //collectible 
-        this.collectible = this.physics.add.sprite(170, 420, "collectible").setScale(2, 2);
-        this.collectible.body.setAllowGravity(false);
-
-        //moving platform
-        this.movplatform = this.physics.add.sprite(1400, 1000, 'movplatform')
+        this.risingLava = this.physics.add.sprite(400, 1010, 'rlava').setScale(1000, 6).refreshBody().setDepth(1)
             .setVelocity(100, -100);
-        this.movplatform.setImmovable(true);
-        this.movplatform.body.setAllowGravity(false);
+        this.risingLava.setImmovable(true);
+        this.risingLava.body.setAllowGravity(false);
         this.tweens.timeline({
-            targets: this.movplatform.body.velocity,
+            targets: this.risingLava.body.velocity,
             loop: -1,
             tweens: [
-                { x: 0, y: -200, duration: 2000, ease: 'Stepped' },
+                { x: 10, y: 45, duration: 3000, ease: 'Stepped' },
+                { x: -10, y: 15, duration: 2000, ease: 'Stepped' },
+                { x: 10, y: -45, duration: 3000, ease: 'Stepped' },
+                { x: -10, y: -15, duration: 2000, ease: 'Stepped' }
+            ]
+        });
+
+        //moving platform
+        this.movplatform0 = this.physics.add.sprite(1750, 360, 'movplatform').setScale(.7, .5)
+            .setVelocity(100, -100);
+        this.movplatform0.setImmovable(true);
+        this.movplatform0.body.setAllowGravity(false);
+        this.tweens.timeline({
+            targets: this.movplatform0.body.velocity,
+            loop: -1,
+            tweens: [
+                { x: 0, y: +150, duration: 3000, ease: 'Stepped' },
                 { x: 0, y: 0, duration: 1000, ease: 'Stepped' },
-                { x: 0, y: 200, duration: 2000, ease: 'Stepped' },
-                { x: 0, y: 0, duration: 1000, ease: 'Stepped' }
+                { x: 0, y: -150, duration: 3000, ease: 'Stepped' },
+                { x: 0, y: 0, duration: 1900, ease: 'Stepped' }
             ]
         });
 
@@ -110,87 +117,78 @@ export default class Level5 extends Phaser.Scene {
             ]
         });
 
-        //moving spikes
-        this.spike1 = this.physics.add.sprite(250, 1050, 'spike').setScale(0.3, 0.3)
-            .setVelocity(100, -100).setDepth(0);
-        this.spike1.setImmovable(true);
-        this.spike1.body.setAllowGravity(false);
+        this.movplatform2 = this.physics.add.sprite(1100, 360, 'movplatform').setScale(.4, .6)
+            .setVelocity(100, -100);
+        this.movplatform2.setImmovable(true);
+        this.movplatform2.body.setAllowGravity(false);
         this.tweens.timeline({
-            targets: this.spike1.body.velocity,
+            targets: this.movplatform2.body.velocity,
             loop: -1,
             tweens: [
-                { x: 0, y: -150, duration: 2400, ease: 'Stepped' },
-                { x: 0, y: 150, duration: 2400, ease: 'Stepped' },
+                { x: -50, y: 0, duration: 3000, ease: 'Stepped' },
+                { x: 0, y: 0, duration: 100, ease: 'Stepped' },
+                { x: +50, y: 0, duration: 3000, ease: 'Stepped' },
+                { x: 0, y: 0, duration: 100, ease: 'Stepped' }
             ]
         });
 
-        this.spike2 = this.physics.add.sprite(600, 600, 'spike').setScale(0.3, 0.3)
-            .setVelocity(100, -100).setDepth(0);
-        this.spike2.setImmovable(true);
-        this.spike2.body.setAllowGravity(false);
+        this.movplatform3 = this.physics.add.sprite(690, 220, 'movplatform').setScale(.6, .3)
+            .setVelocity(100, -100);
+        this.movplatform3.setImmovable(true);
+        this.movplatform3.body.setAllowGravity(false);
         this.tweens.timeline({
-            targets: this.spike2.body.velocity,
+            targets: this.movplatform3.body.velocity,
             loop: -1,
             tweens: [
-                { x: 0, y: 150, duration: 2400, ease: 'Stepped' },
-                { x: 0, y: -150, duration: 2400, ease: 'Stepped' },
+                { x: 0, y: +50, duration: 3000, ease: 'Stepped' },
+                { x: 0, y: 0, duration: 100, ease: 'Stepped' },
+                { x: 0, y: -50, duration: 3000, ease: 'Stepped' },
+                { x: 0, y: 0, duration: 100, ease: 'Stepped' }
             ]
         });
-
-        this.spike3 = this.physics.add.sprite(1240, 700, 'spike').setScale(0.3, 0.3)
-            .setVelocity(100, -100).setDepth(0);
-        this.spike3.setImmovable(true);
-        this.spike3.body.setAllowGravity(false);
-        this.tweens.timeline({
-            targets: this.spike3.body.velocity,
-            loop: -1,
-            tweens: [
-                { x: 150, y: 0, duration: 2400, ease: 'Stepped' },
-                { x: -150, y: 0, duration: 2400, ease: 'Stepped' },
-            ]
-        });
-
-        this.spike4 = this.physics.add.sprite(1580, 900, 'spike').setScale(0.3, 0.3)
-            .setVelocity(100, -100).setDepth(0);
-        this.spike4.setImmovable(true);
-        this.spike4.body.setAllowGravity(false);
-        this.tweens.timeline({
-            targets: this.spike4.body.velocity,
-            loop: -1,
-            tweens: [
-                { x: -150, y: 0, duration: 2400, ease: 'Stepped' },
-                { x: 150, y: 0, duration: 2400, ease: 'Stepped' },
-            ]
-        });
-
+        
         //asteroids
-        this.asteroid1 = this.asteroid.create(1940, 20, 'asteroid').setScale(0.5, 0.5);
-        this.asteroid2 = this.asteroid.create(2140, 200, 'asteroid').setScale(0.6, 0.6);
-        this.asteroid3 = this.asteroid.create(2400, 400, 'asteroid').setScale(0.4, 0.4);
-        this.asteroid4 = this.asteroid.create(2740, 100, 'asteroid').setScale(0.5, 0.5);
-        this.asteroid5 = this.asteroid.create(2940, 300, 'asteroid').setScale(0.6, 0.6);
-        this.asteroid6 = this.asteroid.create(3100, 250, 'asteroid').setScale(0.4, 0.4);
+        this.asteroid1 = this.asteroid.create(0, 20, 'asteroid').setScale(0.5, 0.5);
+        this.asteroid2 = this.asteroid.create(0, 500, 'asteroid').setScale(0.6, 0.6);
+        this.asteroid3 = this.asteroid.create(0, 100, 'asteroid').setScale(0.4, 0.4);
+        this.asteroid4 = this.asteroid.create(-200, 400, 'asteroid').setScale(0.5, 0.5);
+        this.asteroid5 = this.asteroid.create(-400, 300, 'asteroid').setScale(0.6, 0.6);
+        this.asteroid6 = this.asteroid.create(-600, 340, 'asteroid').setScale(0.4, 0.4);
+        this.asteroid7 = this.asteroid.create(-900, 530, 'asteroid').setScale(0.5, 0.4);
+        this.asteroid8 = this.asteroid.create(-1100, 340, 'asteroid').setScale(0.5, 0.4);
         this.asteroid1.body.setAllowGravity(false);
         this.asteroid2.body.setAllowGravity(false);
         this.asteroid3.body.setAllowGravity(false);
         this.asteroid4.body.setAllowGravity(false);
         this.asteroid5.body.setAllowGravity(false);
         this.asteroid6.body.setAllowGravity(false);
+        this.asteroid7.body.setAllowGravity(false);
+        this.asteroid8.body.setAllowGravity(false);
 
         //platforms left to right
-        this.platforms.create(0, 940, 'brock').setScale(0.5, 0.5).refreshBody();
-        this.platforms.create(400, 960, 'srock').setScale(.5, 1).refreshBody();
-        this.platforms.create(280, 400, 'brock').setScale(.3, 0.3).refreshBody();
-        this.platforms.create(280, 500, 'srock').setScale(.75, 0.75).refreshBody();
-        this.platforms.create(750, 880, 'srock').setScale(0.5, 0.4).refreshBody();
-        this.platforms.create(860, 880, 'brock').setScale(0.3, 0.5).refreshBody();
-
-        this.platforms.create(1950, 880, 'brock').setScale(.5, 1.5).refreshBody();
-        this.platforms.create(1850, 550, 'srock').setScale(.5, .5).refreshBody();
-        //this.platforms.create(1400, 340, 'srock').setScale(.5, .3).refreshBody();
-        this.platforms.create(1000, 300, 'srock').setScale(.6, 1).refreshBody();
-
-        this.goal.create(500, 400, 'goal').setScale(0.9, 0.9).refreshBody();
+        this.platforms.create(0, 885, 'brock').setScale(0.4, 0.5).refreshBody();
+        this.float1 = this.floatplatforms.create(300, 860, 'srock').setScale(.3, .3).refreshBody();
+        this.float1.body.setAllowGravity(false).setImmovable(false);
+        //
+        this.float2 = this.floatplatforms.create(550, 880, 'srock').setScale(.3, .3).refreshBody();
+        this.float2.body.setAllowGravity(false).setImmovable(false);
+        this.float2.flipX = true;
+        //
+        this.float3 = this.floatplatforms.create(800, 850, 'srock').setScale(.3, .3).refreshBody();
+        this.float3.body.setAllowGravity(false).setImmovable(false);
+        //
+        this.float4 = this.floatplatforms.create(1300, 850, 'srock').setScale(.4, .3).refreshBody();
+        this.float4.body.setAllowGravity(false).setImmovable(false);
+        //
+        this.float5 = this.floatplatforms.create(1500, 790, 'srock').setScale(.25, .4).refreshBody();
+        this.float5.body.setAllowGravity(false).setImmovable(false);
+        //
+        this.float6 = this.floatplatforms.create(430, 280, 'srock').setScale(.25, .4).refreshBody();
+        this.float6.body.setAllowGravity(false).setImmovable(false);
+        
+        this.platforms.create(1000, 895, 'brock').setScale(0.3, 0.5).refreshBody();
+        this.platforms.create(1890, 320, 'srock').setScale(.5, .5).refreshBody();
+        this.goal.create(220, 300, 'goal').setScale(0.9, 0.9).refreshBody();
 
         //Create and configure player
         this.player = this.physics.add.sprite(50, 750, 'dude')
@@ -200,15 +198,14 @@ export default class Level5 extends Phaser.Scene {
 
         //Add colliders between objects
         this.physics.add.collider(this.platforms, this.player);
-        this.physics.add.collider(this.movplatform, this.player, this.platGrav, null, this);
+        this.physics.add.collider(this.movplatform0, this.player, this.platGrav, null, this);
         this.physics.add.collider(this.movplatform1, this.player, this.platGrav, null, this);
+        this.physics.add.collider(this.movplatform2, this.player, this.platGrav, null, this);
+        this.physics.add.collider(this.movplatform3, this.player, this.platGrav, null, this);
+        this.physics.add.collider(this.floatplatforms, this.player);
         this.physics.add.collider(this.goal, this.player, this.win, null, this);
-        this.physics.add.overlap(this.deathLava, this.player, this.death, null, this);
-        //spikes
-        this.physics.add.overlap(this.spike1, this.player, this.death, null, this);
-        this.physics.add.overlap(this.spike2, this.player, this.death, null, this);
-        this.physics.add.overlap(this.spike3, this.player, this.death, null, this);
-        this.physics.add.overlap(this.spike4, this.player, this.death, null, this);
+        this.physics.add.overlap(this.risingLava, this.player, this.death, null, this);
+
         //asteroids
         this.physics.add.overlap(this.asteroid1, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid2, this.player, this.death, null, this);
@@ -216,12 +213,8 @@ export default class Level5 extends Phaser.Scene {
         this.physics.add.overlap(this.asteroid4, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid5, this.player, this.death, null, this);
         this.physics.add.overlap(this.asteroid6, this.player, this.death, null, this);
-        //collectible
-        this.physics.add.overlap(this.collectible, this.player, this.collect, null, this);
-
-        //Debug text
-        //this.statusText = this.add.text(0, 0, 'Free Real-estate');
-
+        this.physics.add.overlap(this.asteroid7, this.player, this.death, null, this);
+        this.physics.add.overlap(this.asteroid8, this.player, this.death, null, this);
 
         //Bind controls
         this.controls = this.input.keyboard.createCursorKeys();
@@ -285,13 +278,9 @@ export default class Level5 extends Phaser.Scene {
             key: 'dash',
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1, end: 2, zeroPad: 3 }), frameRate: 5
         });
-        this.anims.create({
-            key: "collectibleAnim",
-            frames: this.anims.generateFrameNumbers("collectible"),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.collectible.play("collectibleAnim");
+        this.skipButton.on('pointerdown', function (pointer) {
+            this.scene.start('primaryMenu', {soundStatus: this.soundStatus});
+        }.bind(this));
     }
 
     update() {
@@ -404,22 +393,13 @@ export default class Level5 extends Phaser.Scene {
             }
         }
 
+
         //Double jump
         if ((upPress && touchFloor) || (wPress && touchFloor)) {
             if (this.soundStatus) { this.jetpack.play(); }
             this.player.setVelocityY(-220);
             this.jumpCount++;
-            //this.statusText.setText(this.jumpCount);
-        }
-        else if ((upPress && (!touchFloor && this.jumpCount < 2)) || (wPress && (!touchFloor && this.jumpCount < 2))) {
-            if (this.soundStatus) { this.jetpack.play(); }
-            this.player.setVelocityY(-220);
-            this.jumpCount++;
-            //this.statusText.setText(this.jumpCount);
-        }
-        else if ((touchFloor && !upPress && this.jumpCount != 0) || (touchFloor && !wPress && this.jumpCount != 0)) {
-            this.jumpCount = 0;
-            //this.statusText.setText(this.jumpCount);
+            console.log("First Jump");
         }
 
         //textboxes
@@ -429,20 +409,10 @@ export default class Level5 extends Phaser.Scene {
             this.counter++;
             if (this.soundStatus) { this.messageSound.play(); }
         }
-        else if (this.player.x > 600 && this.counter == 1) {
+        else if (this.player.x > 200 && this.counter == 1) {
             this.firstText.destroy();
             this.tbox.destroy();
             this.counter++;
-        }
-        if (this.player.x > 1750 && this.player.y < 600 && this.counter == 2) {
-            this.tbox = this.add.image(900, 610, 'info').setScale(2, 0.5);
-            this.secondText = this.add.text(715, 580, this.prompt2);
-            this.counter++;
-            if (this.soundStatus) { this.messageSound.play(); }
-        }
-        else if (this.player.x < 1600 && this.counter == 3) {
-            this.secondText.destroy();
-            this.tbox.destroy();
         }
 
         //asteroids
@@ -452,6 +422,8 @@ export default class Level5 extends Phaser.Scene {
         this.moveAsteroids(this.asteroid4);
         this.moveAsteroids(this.asteroid5);
         this.moveAsteroids(this.asteroid6);
+        this.moveAsteroids(this.asteroid7);
+        this.moveAsteroids(this.asteroid8);
 
         //rotate asteroids
         this.asteroid1.angle += 0.6;
@@ -460,20 +432,8 @@ export default class Level5 extends Phaser.Scene {
         this.asteroid4.angle -= 0.7;
         this.asteroid5.angle -= 0.9;
         this.asteroid6.angle -= 1.1;
-
-        //spike
-        this.spike1.angle += .4;
-        this.spike2.angle -= .4;
-        this.spike3.angle += .4;
-        this.spike4.angle -= .4;
-    }
-
-    collect(player, collectible) {
-        this.add.text(100, 100, "FUCKO");
-        console.log("FUCKO");
-        this.collectible.stop();
-        this.collectible.disableBody(true, true);
-        this.collectible.destroy();
+        this.asteroid7.angle -= 0.9;
+        this.asteroid8.angle -= 0.1;
     }
 
     platGrav(player, movplatform) {
@@ -483,15 +443,15 @@ export default class Level5 extends Phaser.Scene {
     }
 
     moveAsteroids(asteroid) {
-        asteroid.x -= Phaser.Math.Between(2, 3); //random speed
-        if (asteroid.x < 0) {
+        asteroid.x += Phaser.Math.Between(1, 3); //random speed
+        if (asteroid.x > 1930) {
             this.resetAsteroids(asteroid);
         }
     }
 
     resetAsteroids(asteroid) {
-        asteroid.x = 1950;
-        asteroid.y = Phaser.Math.Between(-40, 300);
+        asteroid.x = -50;
+        asteroid.y = Phaser.Math.Between(0, 610);
     }
 
     //Win condition: land on end goal
@@ -502,7 +462,7 @@ export default class Level5 extends Phaser.Scene {
     }
 
     //Lose condition: hit lava
-    death(player, deathLava) {
+    death(player, risingLava) {
         this.physics.pause();
         this.gameOver = true;
     }
