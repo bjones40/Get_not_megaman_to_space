@@ -9,6 +9,7 @@ export default class Level3 extends Phaser.Scene {
     }
     preload() {
         this.load.atlas('dude', 'assets/dude2.png', 'assets/dude2.json');
+        this.load.image('skip', 'assets/retired/skip.png');
         //this.load.image('char', 'assets/char.jpg');
         //this.load.image('platform', 'assets/platformg.jpg');
         this.load.image('bg', 'assets/bg.jpg');
@@ -42,6 +43,7 @@ export default class Level3 extends Phaser.Scene {
         this.goal = this.physics.add.staticGroup();
         console.log("Sound update: "+this.soundStatus);
         this.spike = this.physics.add.staticGroup();
+        this.skipButton = this.add.image(60,30,'skip').setInteractive();
 
         this.jetpack = this.sound.add('jetpack', {
             loop : false,
@@ -211,8 +213,9 @@ export default class Level3 extends Phaser.Scene {
             key: 'dash',
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1,end: 2, zeroPad: 3}),frameRate: 5
         });
-
-
+        this.skipButton.on('pointerdown', function (pointer) {
+            this.scene.start('Level4',{soundStatus: this.soundTemp});
+          }.bind(this));
     }
 
 
