@@ -500,7 +500,7 @@ export default class Level4 extends Phaser.Scene {
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
-                    this.game.sound.stopAll();
+                    //this.game.sound.stopAll();
                     this.scene.start("Level5", { soundStatus: this.soundStatus });
                 }
             })

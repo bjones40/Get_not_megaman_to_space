@@ -35,7 +35,6 @@ export default class optionsMenu extends Phaser.Scene {
     this.hoveringSprite = this.add.sprite(100, 100, "crystal").setScale(3, 3).setVisible(false);
 
     //play button hover 
-    this.gameButton.setInteractive();
     this.gameButton.on("pointerover", () => {
       console.log("WORKING");
       this.hoveringSprite.play("rotate");

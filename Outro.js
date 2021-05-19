@@ -20,7 +20,8 @@ export default class Outro extends Phaser.Scene {
         this.load.image('mrock', 'assets/blocks/rockmed.png');
         this.load.image('srock', 'assets/blocks/rocksmall.png');
         this.load.image('sp', 'assets/sp.png');
-        this.load.image('asteroid', 'assets/asteroid.png')
+        this.load.image('asteroid', 'assets/asteroid.png');
+        this.load.image('spaceship', 'assets/spaceship.png');
         this.load.audio('message', 'assets/audio/message.mp3');
         this.load.audio('jetpack', 'assets/audio/jetpack.mp3');
         this.load.audio('died', 'assets/audio/death.mp3');
@@ -34,13 +35,14 @@ export default class Outro extends Phaser.Scene {
         this.jumpCount = 0;
         this.coolDown = 0;
         this.counter = 0;
-        this.prompt1 = "Is- is that a ship???\n Is someone else on this planet\nbesides me...?";
+        this.prompt1 = "Is- is that a ship??? Is someone else \non this planet besides me...?";
 
 
         //Bind world objects
         this.background = this.add.image(0, 0, 'bg').setOrigin(0);
         this.platforms = this.physics.add.staticGroup();
         this.goal = this.physics.add.staticGroup();
+        this.spaceship = this.physics.add.staticGroup();
         this.skipButton = this.add.image(60,30,'skip').setInteractive();
         console.log("Sound update: " + this.soundStatus);
 
@@ -68,10 +70,26 @@ export default class Outro extends Phaser.Scene {
 
         //Create world objects
         //platforms left to right
-        this.platforms.create(0, 900, "sm").setScale(2,2).refreshBody();
+        this.platforms.create(0, 1090, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(-100, 1100, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(100, 1110, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(310, 1070, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(240, 1100, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(500, 1040, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(540, 1120, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(610, 1090, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(850, 1060, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(920, 1090, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(1200, 1060, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(1100, 1120, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(1300, 1090, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(1500, 1100, "sp").setScale(2,2).refreshBody();
+        this.goal.create(1700, 1070, "sp").setScale(2,2).refreshBody();
+        this.platforms.create(1900, 1070, "sp").setScale(2,2).refreshBody();
+        this.spaceship.create(1820, 910, "spaceship").setScale(0.3,0.3).refreshBody();
 
         //Create and configure player
-        this.player = this.physics.add.sprite(50, 750, 'dude')
+        this.player = this.physics.add.sprite(50, 1010, 'dude')
             .setScale(1.5)
             .setBounce(0)
             .setCollideWorldBounds(true);
@@ -143,7 +161,7 @@ export default class Outro extends Phaser.Scene {
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1, end: 2, zeroPad: 3 }), frameRate: 5
         });
         this.skipButton.on('pointerdown', function (pointer) {
-            this.scene.start('primaryMenu', {soundStatus: this.soundStatus});
+            this.scene.start('EndCredits', {soundStatus: this.soundStatus});
         }.bind(this));
     }
 
@@ -179,19 +197,16 @@ export default class Outro extends Phaser.Scene {
         //Evaluate winstate for animation
         this.winState;
         if (this.winState) {
-            if (this.soundStatus) {
-                this.tpSound.play();
-            }
             this.physics.pause();
             this.changeAnimations = true;
-            this.player.anims.play('teleport', true);
+            this.cameras.main.fade(6000);
             this.time.addEvent({
-                delay: 650, // in ms
+                delay: 4000, // in ms
                 callback: () => {
                     this.winState = false;
                     this.player.x = 9999;
                     this.game.sound.stopAll();
-                    this.scene.start('primaryMenu', { soundStatus: this.soundStatus });
+                    this.scene.start('EndCredits', { soundStatus: this.soundStatus });
                 }
             })
         }
@@ -268,12 +283,12 @@ export default class Outro extends Phaser.Scene {
 
         //textboxes
         if (this.counter == 0) {
-            this.tbox = this.add.image(280, 140, 'info').setScale(2, 0.7);
-            this.firstText = this.add.text(100, 100, this.prompt1);
+            this.tbox = this.add.image(280, 430, 'info').setScale(2, 0.6);
+            this.firstText = this.add.text(100, 400, this.prompt1);
             this.counter++;
             if (this.soundStatus) { this.messageSound.play(); }
         }
-        else if (this.player.x > 200 && this.counter == 1) {
+        else if (this.player.x > 500 && this.counter == 1) {
             this.firstText.destroy();
             this.tbox.destroy();
             this.counter++;
