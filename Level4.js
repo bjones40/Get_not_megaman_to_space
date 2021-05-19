@@ -450,11 +450,11 @@ export default class Level4 extends Phaser.Scene {
             key: 'dash',
             frames: this.anims.generateFrameNames('dude', { prefix: 'dash', start: 1, end: 2, zeroPad: 3 }), frameRate: 5
         });
-        /*Button to skip to outro later
+        //Button to skip to outro later
         this.skipButton.on('pointerdown', function (pointer) {
-            this.scene.start('Outro',{soundStatus: this.soundTemp});
+            this.scene.start('Level5',{soundStatus: this.soundStatus});
           }.bind(this));
-*/
+
     }
 
     update() {
@@ -501,11 +501,11 @@ export default class Level4 extends Phaser.Scene {
                     this.winState = false;
                     this.player.x = 9999;
                     this.game.sound.stopAll();
-                    this.scene.start("primaryMenu", { soundStatus: this.soundStatus });
+                    this.scene.start("Level5", { soundStatus: this.soundStatus });
                 }
             })
         }
-        
+
         //Basic Movement and animation binding
         if (this.controls.left.isDown || this.aKey.isDown) {
             this.player.setVelocityX(-160);
